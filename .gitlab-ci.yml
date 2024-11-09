@@ -1,0 +1,30 @@
+default:
+  image: "klakegg/hugo:latest-ext"
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+before_script:
+  - echo "Checking Git submodules"
+  - git submodule update --init --recursive
+
+test:  # builds and tests your site
+  script:
+    - echo "Running Hugo version"
+    - hugo version  # Debugging Hugo version
+    - hugo --minify  # Explicit Hugo build command
+  rules:
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+
+pages:  # a predefined job that builds your pages and saves them to the specified path.
+  script:
+    - echo "Running Hugo version"
+    - hugo version  # Debugging Hugo version
+    - hugo --minify  # Explicit Hugo build command
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  environment: production
+
