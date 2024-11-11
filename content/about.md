@@ -1,2 +1,2 @@
 # About Me
-Hello World! I am Ceald, a cybersecurity student and a member of the team l33chers on HackTheBox. 
+Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools sometimes. 

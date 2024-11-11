@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Terminal</title>
+    <title>Ceald&#39;s blog</title>
     <link>//localhost:1313/</link>
-    <description>Recent content on Terminal</description>
+    <description>Recent content on Ceald&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 08 Nov 2024 23:55:59 -0700</lastBuildDate><atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 10 Nov 2024 16:56:20 -0700</lastBuildDate><atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Delta2</title>
+      <link>//localhost:1313/posts/delta2/</link>
+      <pubDate>Sun, 10 Nov 2024 16:56:20 -0700</pubDate>
+      
+      <guid>//localhost:1313/posts/delta2/</guid>
+      <description>Background Delta2 is an API that is a Swiss army knife for active directory. I wrote this project because I was sick of having to set up java and remembering how to use bloodhound python for doing active directory boxes on HackTheBox, so I wrote my own. Delta2&amp;rsquo;s primary use is automation like automate kerberosing after mapping the domain or getting shortest paths to admin users and exploiting the necessary users to get to admin users.</description>
+      <content>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;Delta2 is an API that is a Swiss army knife for active directory. I wrote this project because I was sick of having to set up java and remembering how to use bloodhound python for doing active directory boxes on HackTheBox, so I wrote my own. Delta2&amp;rsquo;s primary use is automation like automate kerberosing after mapping the domain or getting shortest paths to admin users and exploiting the necessary users to get to admin users.&lt;/p&gt;
+&lt;p&gt;Delta2 was my first successful full-stack application and took many months to build. It uses Memgraph which is an alternative to Neo4j as the graphing database and FastAPI for the API, and it&amp;rsquo;s containerized with docker for easy deployment.&lt;/p&gt;
+&lt;h2 id=&#34;process-of-building&#34;&gt;Process of building&lt;/h2&gt;
+&lt;h3 id=&#34;plan&#34;&gt;Plan&lt;/h3&gt;
+&lt;p&gt;My plan was to build some kind of script or API that will allow me to move through a domain efficiently. There were a few ways I could&amp;rsquo;ve done that like using bloodhound and neo4j to find paths in the graph, but that&amp;rsquo;d require me to read documentation and code that I didn&amp;rsquo;t write. My second option was to &amp;ldquo;reinvent the wheel&amp;rdquo; which is what I did. Unfortunately I thought it&amp;rsquo;d be the easiest way which it probably wasn&amp;rsquo;t, but I learned more than if I were to just make it based off of bloodhound.&lt;/p&gt;
+&lt;h3 id=&#34;the-beginning&#34;&gt;The Beginning&lt;/h3&gt;
+&lt;p&gt;After I kind of had a plan I started building it. I built an outline for the API with various routes I wanted like Kerberoasting, getting TGTs, AS-REP roasting, and a collection script. Testing was a bit of a pain because I would use boxes from HackTheBox, and sometimes I forgot to take out test code and I would have to take the repository down, remove the test code then put it back up to avoid spoilers for boxes.&lt;/p&gt;
+&lt;h3 id=&#34;collection-script-works&#34;&gt;Collection Script Works&lt;/h3&gt;
+&lt;p&gt;One big issue with building the collection script was supporting Kerberos and reading nTSecurityDescriptors. nTSecurityDescriptors describe what objects and permissions a user has over another for example: Bob has WriteAll on Administrator. I first realized the issue with Kerberos when I couldn&amp;rsquo;t get ldap3 and impacket to work together like how they work in bloodhound python so I switched to BloodyAD which is an Active Directory privilege escalation framework. So I reverse engineered BloodyAD to figure out how to use it because there&amp;rsquo;s no documentation for how to use its python modules and got it kind of working. I say kind of because now I had to learn how to read nTSecurityDescriptors. You can find how I learned the syntax for nTSecurityDescriptors here:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/&#34;&gt;https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Writing the collection script is what took the longest time because I also had to reverse engineer how bloodhound worked a little and do a bunch of debugging to figure out what information and how to commit it to the graph as well as how to connect nodes.&lt;/p&gt;
+&lt;p&gt;Post will be updated soon.&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>Hello</title>
       <link>//localhost:1313/posts/hello/</link>
@@ -15,6 +38,18 @@
       <guid>//localhost:1313/posts/hello/</guid>
       <description>Hello World!! </description>
       <content>&lt;h2 id=&#34;hello-world&#34;&gt;Hello World!!&lt;/h2&gt;
+</content>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>//localhost:1313/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>//localhost:1313/about/</guid>
+      <description>About Me Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools sometimes.</description>
+      <content>&lt;h1 id=&#34;about-me&#34;&gt;About Me&lt;/h1&gt;
+&lt;p&gt;Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools sometimes.&lt;/p&gt;
 </content>
     </item>
     
