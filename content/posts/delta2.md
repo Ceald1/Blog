@@ -13,7 +13,7 @@ hideComments = false
 +++
 
 ## Background
-Delta2 is an API that is a Swiss army knife for active directory. I wrote this project because I was sick of having to set up java and remembering how to use bloodhound python for doing active directory boxes on HackTheBox, so I wrote my own. Delta2's primary use is automation like automate kerberosing after mapping the domain or getting shortest paths to admin users and exploiting the necessary users to get to admin users.
+Delta2 is an API that is a Swiss army knife for active directory. I wrote this project because I was sick of having to set up java and remembering how to use bloodhound python for doing active directory boxes on HackTheBox, so I wrote my own. Delta2's primary use is automation like automate kerberoasting after mapping the domain or getting shortest paths to admin users and exploiting the necessary users to get to admin users.
 
 Delta2 was my first successful full-stack application and took many months to build. It uses Memgraph which is an alternative to Neo4j as the graphing database and FastAPI for the API, and it's containerized with docker for easy deployment.
 
@@ -26,13 +26,13 @@ My plan was to build some kind of script or API that will allow me to move throu
 After I kind of had a plan I started building it. I built an outline for the API with various routes I wanted like Kerberoasting, getting TGTs, AS-REP roasting, and a collection script. Testing was a bit of a pain because I would use boxes from HackTheBox, and sometimes I forgot to take out test code and I would have to take the repository down, remove the test code then put it back up to avoid spoilers for boxes. 
 
 ### Collection Script Works
-One big issue with building the collection script was supporting Kerberos and reading nTSecurityDescriptors. nTSecurityDescriptors describe what objects and permissions a user has over another for example: Bob has WriteAll on Administrator. I first realized the issue with Kerberos when I couldn't get ldap3 and impacket to work together like how they work in bloodhound python so I switched to BloodyAD which is an Active Directory privilege escalation framework. So I reverse engineered BloodyAD to figure out how to use it because there's no documentation for how to use its python modules and got it kind of working. I say kind of because now I had to learn how to read nTSecurityDescriptors. You can find how I learned the syntax for nTSecurityDescriptors here:
+One big issue with building the collection script was supporting Kerberos and reading nTSecurityDescriptors. nTSecurityDescriptors describe what objects and permissions a user has over another for example: Bob has WriteAll on Administrator. I first realized the issue with Kerberos when I couldn't get ldap3 and Impacket to work together like how they work in bloodhound python so I switched to BloodyAD which is an Active Directory privilege escalation framework. So I reverse engineered BloodyAD to figure out how to use it because there's no documentation for how to use its python modules and got it kind of working. I say kind of because now I had to learn how to read nTSecurityDescriptors. You can find how I learned the syntax for nTSecurityDescriptors here:
 
 
 https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/
 
 
-Writing the collection script is what took the longest time because I also had to do a little reverse engineering on how bloodhound python worked and do a bunch of debugging to figure out what information and how to commit it to the graph as well as how to connect nodes. After collecting nodes next was to graph and link them that's where I read and parsed SnTSecurityDescriptors. No python modules supported it, so I had to do it manually.
+Writing the collection script is what took the longest time because I also had to do a little reverse engineering on how bloodhound python worked and do a bunch of debugging to figure out what information and how to commit it to the graph as well as how to connect nodes. After collecting nodes next was to graph and link them that's where I read and parsed nTSecurityDescriptors. No python modules supported it, so I had to do it manually.
 
 
 
@@ -103,3 +103,5 @@ WHERE m.disabled IS NULL AND m.t = "computer"
   AND size(relationships(path1)) > 0
 RETURN path1
 ```
+
+More coming soon on this post...
