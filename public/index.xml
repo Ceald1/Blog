@@ -6,16 +6,27 @@
     <description>Recent content on Ceald&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 10 Nov 2024 16:56:20 -0700</lastBuildDate><atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Nov 2024 17:31:31 -0700</lastBuildDate><atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mothership_c2</title>
+      <link>//localhost:1313/posts/mothership_c2/</link>
+      <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
+      
+      <guid>//localhost:1313/posts/mothership_c2/</guid>
+      <description>Under construction&amp;hellip;..</description>
+      <content>&lt;p&gt;Under construction&amp;hellip;..&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>Delta2</title>
       <link>//localhost:1313/posts/delta2/</link>
       <pubDate>Sun, 10 Nov 2024 16:56:20 -0700</pubDate>
       
       <guid>//localhost:1313/posts/delta2/</guid>
-      <description>Background Delta2 is an API that is a Swiss army knife for active directory. I wrote this project because I was sick of having to set up java and remembering how to use bloodhound python for doing active directory boxes on HackTheBox, so I wrote my own. Delta2&amp;rsquo;s primary use is automation like automate kerberosing after mapping the domain or getting shortest paths to admin users and exploiting the necessary users to get to admin users.</description>
+      <description>Background Delta2 is an API that is a Swiss army knife for active directory. I wrote this project because I was sick of having to set up java and remembering how to use bloodhound python for doing active directory boxes on HackTheBox, so I wrote my own. Delta2&amp;rsquo;s primary use is automation like automate kerberoasting after mapping the domain or getting shortest paths to admin users and exploiting the necessary users to get to admin users.</description>
       <content>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-&lt;p&gt;Delta2 is an API that is a Swiss army knife for active directory. I wrote this project because I was sick of having to set up java and remembering how to use bloodhound python for doing active directory boxes on HackTheBox, so I wrote my own. Delta2&amp;rsquo;s primary use is automation like automate kerberosing after mapping the domain or getting shortest paths to admin users and exploiting the necessary users to get to admin users.&lt;/p&gt;
+&lt;p&gt;Delta2 is an API that is a Swiss army knife for active directory. I wrote this project because I was sick of having to set up java and remembering how to use bloodhound python for doing active directory boxes on HackTheBox, so I wrote my own. Delta2&amp;rsquo;s primary use is automation like automate kerberoasting after mapping the domain or getting shortest paths to admin users and exploiting the necessary users to get to admin users.&lt;/p&gt;
 &lt;p&gt;Delta2 was my first successful full-stack application and took many months to build. It uses Memgraph which is an alternative to Neo4j as the graphing database and FastAPI for the API, and it&amp;rsquo;s containerized with docker for easy deployment.&lt;/p&gt;
 &lt;h2 id=&#34;process-of-building&#34;&gt;Process of building&lt;/h2&gt;
 &lt;h3 id=&#34;plan&#34;&gt;Plan&lt;/h3&gt;
@@ -23,10 +34,72 @@
 &lt;h3 id=&#34;the-beginning&#34;&gt;The Beginning&lt;/h3&gt;
 &lt;p&gt;After I kind of had a plan I started building it. I built an outline for the API with various routes I wanted like Kerberoasting, getting TGTs, AS-REP roasting, and a collection script. Testing was a bit of a pain because I would use boxes from HackTheBox, and sometimes I forgot to take out test code and I would have to take the repository down, remove the test code then put it back up to avoid spoilers for boxes.&lt;/p&gt;
 &lt;h3 id=&#34;collection-script-works&#34;&gt;Collection Script Works&lt;/h3&gt;
-&lt;p&gt;One big issue with building the collection script was supporting Kerberos and reading nTSecurityDescriptors. nTSecurityDescriptors describe what objects and permissions a user has over another for example: Bob has WriteAll on Administrator. I first realized the issue with Kerberos when I couldn&amp;rsquo;t get ldap3 and impacket to work together like how they work in bloodhound python so I switched to BloodyAD which is an Active Directory privilege escalation framework. So I reverse engineered BloodyAD to figure out how to use it because there&amp;rsquo;s no documentation for how to use its python modules and got it kind of working. I say kind of because now I had to learn how to read nTSecurityDescriptors. You can find how I learned the syntax for nTSecurityDescriptors here:&lt;/p&gt;
+&lt;p&gt;One big issue with building the collection script was supporting Kerberos and reading nTSecurityDescriptors. nTSecurityDescriptors describe what objects and permissions a user has over another for example: Bob has WriteAll on Administrator. I first realized the issue with Kerberos when I couldn&amp;rsquo;t get ldap3 and Impacket to work together like how they work in bloodhound python so I switched to BloodyAD which is an Active Directory privilege escalation framework. So I reverse engineered BloodyAD to figure out how to use it because there&amp;rsquo;s no documentation for how to use its python modules and got it kind of working. I say kind of because now I had to learn how to read nTSecurityDescriptors. You can find how I learned the syntax for nTSecurityDescriptors here:&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/&#34;&gt;https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Writing the collection script is what took the longest time because I also had to reverse engineer how bloodhound worked a little and do a bunch of debugging to figure out what information and how to commit it to the graph as well as how to connect nodes.&lt;/p&gt;
-&lt;p&gt;Post will be updated soon.&lt;/p&gt;
+&lt;p&gt;Writing the collection script is what took the longest time because I also had to do a little reverse engineering on how bloodhound python worked and do a bunch of debugging to figure out what information and how to commit it to the graph as well as how to connect nodes. After collecting nodes next was to graph and link them that&amp;rsquo;s where I read and parsed nTSecurityDescriptors. No python modules supported it, so I had to do it manually.&lt;/p&gt;
+&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;p&gt;After getting the collection script working next was to write some examples for how to use the graph data and the other endpoints of the API.&lt;/p&gt;
+&lt;p&gt;Some examples I built included a kerberoasting script and a RBCD (Resource Based Constrained Delegation) attack script. Some code snippets for the RBCD script:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;run&lt;/span&gt;(user, password, hash_, aeskey, delegate_to):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  comp_name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;randomcomputer550&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  comp_pass &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Password123!&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;target&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;domain&amp;#34;&lt;/span&gt;: domain,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dc&amp;#34;&lt;/span&gt;: dc,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;kerberos&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;False&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ldap_ssl&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;False&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user_name&amp;#34;&lt;/span&gt;: user,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dc_ip&amp;#34;&lt;/span&gt;: dc_ip
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    },
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;kerb&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;: password,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user_hash&amp;#34;&lt;/span&gt;: hash_,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;aeskey&amp;#34;&lt;/span&gt;: aeskey
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    },
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ops&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;option&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;add_computer&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;computer_name&amp;#34;&lt;/span&gt;: comp_name,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;computer_pass&amp;#34;&lt;/span&gt;: comp_pass,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ou&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;contianer&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  response &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; req&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;post(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://localhost:9000/ldap/objeditor&amp;#39;&lt;/span&gt;, json&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;j)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;json()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  print(response)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;error&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; response[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;response&amp;#39;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;and&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;entryAlreadyExists&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; response[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;response&amp;#39;&lt;/span&gt;]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#66d9ef&#34;&gt;raise&lt;/span&gt; Custom_exception(message&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;response[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;response&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;target&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;domain&amp;#34;&lt;/span&gt;: domain,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dc&amp;#34;&lt;/span&gt;: dc,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;kerberos&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;False&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ldap_ssl&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;False&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user_name&amp;#34;&lt;/span&gt;: user,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dc_ip&amp;#34;&lt;/span&gt;: dc_ip
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    },
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;kerb&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt;: password,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user_hash&amp;#34;&lt;/span&gt;: hash_,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;aeskey&amp;#34;&lt;/span&gt;: aeskey
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The script would add a new computer to the domain and then modify its permissions to have control over an object it can delegate to like the administrator user. All of it is automated by the script running a query to get possible RBCD paths to users. The query:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;MATCH&lt;/span&gt; path1&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;(n &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;{&lt;/span&gt;t: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;}&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;[ &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ALLSHORTEST (r, n &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)]&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;(m)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;WHERE&lt;/span&gt; m.disabled &lt;span style=&#34;color:#66d9ef&#34;&gt;IS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;AND&lt;/span&gt; m.t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;computer&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;AND&lt;/span&gt; n.disabled &lt;span style=&#34;color:#66d9ef&#34;&gt;IS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;AND&lt;/span&gt; n.pwned &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;True&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;AND&lt;/span&gt; m.pwned &lt;span style=&#34;color:#66d9ef&#34;&gt;IS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;AND&lt;/span&gt; m.added_comp &lt;span style=&#34;color:#66d9ef&#34;&gt;IS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;AND&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; m.name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;randomcomputer550$&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;AND&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;ALL&lt;/span&gt;(rel &lt;span style=&#34;color:#66d9ef&#34;&gt;IN&lt;/span&gt; relationships(path1) &lt;span style=&#34;color:#66d9ef&#34;&gt;WHERE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt;(rel) &lt;span style=&#34;color:#66d9ef&#34;&gt;IN&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;memberOf&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;GENERIC_ALL&amp;#34;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;AND&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;size&lt;/span&gt;(relationships(path1)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;RETURN&lt;/span&gt; path1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;More coming soon on this post&amp;hellip;&lt;/p&gt;
 </content>
     </item>
     
