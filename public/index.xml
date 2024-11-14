@@ -13,8 +13,22 @@
       <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
       
       <guid>//localhost:1313/posts/mothership_c2/</guid>
-      <description>Under construction&amp;hellip;..</description>
-      <content>&lt;p&gt;Under construction&amp;hellip;..&lt;/p&gt;
+      <description>Description: Mothership C2 is my command and control server for managing and interacting with shell connections.
+Features: Some features of Mothership include
+Encryption for sending commands and their outputs Shells being managed and interacted with HTTP What is a C2? A C2 server is a Command and Control server, it helps with controlling and commanding shell connections. C2 servers are used by APTs (advanced persistent threats) and by red teams</description>
+      <content>&lt;h2 id=&#34;description&#34;&gt;Description:&lt;/h2&gt;
+&lt;p&gt;Mothership C2 is my command and control server for managing and interacting with shell connections.&lt;/p&gt;
+&lt;h2 id=&#34;features&#34;&gt;Features:&lt;/h2&gt;
+&lt;p&gt;Some features of Mothership include&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Encryption for sending commands and their outputs&lt;/li&gt;
+&lt;li&gt;Shells being managed and interacted with HTTP&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;what-is-a-c2&#34;&gt;What is a C2?&lt;/h2&gt;
+&lt;p&gt;A C2 server is a Command and Control server, it helps with controlling and commanding shell connections. C2 servers are used by APTs (advanced persistent threats) and by red teams&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;//localhost:1313/C2.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s how they work simplified. There&amp;rsquo;s much more that they can do like handle multiple connections at once or support encryption.&lt;/p&gt;
+&lt;p&gt;More coming soon&amp;hellip;&lt;/p&gt;
 </content>
     </item>
     

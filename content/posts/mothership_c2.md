@@ -25,7 +25,7 @@ Some features of Mothership include
 
 A C2 server is a Command and Control server, it helps with controlling and commanding shell connections. C2 servers are used by APTs (advanced persistent threats) and by red teams
 
-![](<C2 Server - Page 2.png>)
+![](/C2.png)
 
 That's how they work simplified. There's much more that they can do like handle multiple connections at once or support encryption.
 
