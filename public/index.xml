@@ -28,7 +28,9 @@ Encryption for sending commands and their outputs Shells being managed and inter
 &lt;p&gt;A C2 server is a Command and Control server, it helps with controlling and commanding shell connections. C2 servers are used by APTs (advanced persistent threats) and by red teams&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;//localhost:1313/C2.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;That&amp;rsquo;s how they work simplified. There&amp;rsquo;s much more that they can do like handle multiple connections at once or support encryption.&lt;/p&gt;
-&lt;p&gt;More coming soon&amp;hellip;&lt;/p&gt;
+&lt;h2 id=&#34;how-does-mothership-work&#34;&gt;How Does Mothership Work?&lt;/h2&gt;
+&lt;p&gt;Mothership supports encryption unlike some other C2s and uses a unique form of authentication to prevent invalid agents from connecting. A diagram of how the authentication works.
+&lt;img src=&#34;//localhost:1313/C2Auth.svg&#34;&gt;&lt;/p&gt;
 </content>
     </item>
     
