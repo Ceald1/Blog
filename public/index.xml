@@ -146,9 +146,10 @@ Encryption for sending commands and their outputs Shells being managed and inter
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>//localhost:1313/about/</guid>
-      <description>About Me Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools sometimes.</description>
+      <description>About Me Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools/projects sometimes. I know python and a bit of Golang</description>
       <content>&lt;h1 id=&#34;about-me&#34;&gt;About Me&lt;/h1&gt;
-&lt;p&gt;Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools sometimes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;//localhost:1313/avatar.png&#34;&gt;
+Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools/projects sometimes. I know python and a bit of Golang&lt;/p&gt;
 </content>
     </item>
     
