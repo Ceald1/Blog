@@ -8,7 +8,7 @@ tags = ["delta2", "new", "cybersecurity", "projects", "python"]
 keywords = ["projects", "delta2", "python"]
 description = ""
 showFullContent = false
-readingTime = false
+readingTime = true
 hideComments = false
 +++
 
