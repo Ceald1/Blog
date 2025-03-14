@@ -88,7 +88,7 @@ paginate = 5
         [[languages.en.menu.main]]
           identifier = "gitlab"
           name = "projects"
-          url = "https://gitlab.com/ceald1"
+          url = "https://github.com/ceald1"
 
 [module]
   # this is needed when you fetch the theme as a submodule to your repo.
