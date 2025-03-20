@@ -1,5 +1,5 @@
 +++
-title = "WinRegistrySecrets"
+title = "Win-Registry-Secrets"
 date = "2025-03-20T13:50:08-07:00"
 author = "Ceald"
 authorTwitter = "" #do not include @

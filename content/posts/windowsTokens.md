@@ -1,5 +1,5 @@
 +++
-title = "WindowsTokens"
+title = "Windows-Tokens"
 date = "2025-03-20T14:17:56-07:00"
 author = "Ceald"
 authorTwitter = "" #do not include @
