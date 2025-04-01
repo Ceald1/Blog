@@ -2,97 +2,107 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Ceald&#39;s blog</title>
-    <link>//localhost:1313/tags/</link>
+    <link>/tags/</link>
     <description>Recent content in Tags on Ceald&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 11 Nov 2024 17:31:31 -0700</lastBuildDate><atom:link href="//localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>C2</title>
-      <link>//localhost:1313/tags/c2/</link>
-      <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
-      
-      <guid>//localhost:1313/tags/c2/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>Cybersecurity</title>
-      <link>//localhost:1313/tags/cybersecurity/</link>
-      <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
-      
-      <guid>//localhost:1313/tags/cybersecurity/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
+    <lastBuildDate>Thu, 20 Mar 2025 14:17:56 -0700</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Go</title>
-      <link>//localhost:1313/tags/go/</link>
-      <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
+      <link>/tags/go/</link>
+      <pubDate>Thu, 20 Mar 2025 14:17:56 -0700</pubDate>
       
-      <guid>//localhost:1313/tags/go/</guid>
+      <guid>/tags/go/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>New</title>
-      <link>//localhost:1313/tags/new/</link>
+      <link>/tags/new/</link>
+      <pubDate>Thu, 20 Mar 2025 14:17:56 -0700</pubDate>
+      
+      <guid>/tags/new/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Windows</title>
+      <link>/tags/windows/</link>
+      <pubDate>Thu, 20 Mar 2025 14:17:56 -0700</pubDate>
+      
+      <guid>/tags/windows/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>C2</title>
+      <link>/tags/c2/</link>
       <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
       
-      <guid>//localhost:1313/tags/new/</guid>
+      <guid>/tags/c2/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>Cybersecurity</title>
+      <link>/tags/cybersecurity/</link>
+      <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
+      
+      <guid>/tags/cybersecurity/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>Projects</title>
-      <link>//localhost:1313/tags/projects/</link>
+      <link>/tags/projects/</link>
       <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
       
-      <guid>//localhost:1313/tags/projects/</guid>
+      <guid>/tags/projects/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>Python</title>
-      <link>//localhost:1313/tags/python/</link>
+      <link>/tags/python/</link>
       <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
       
-      <guid>//localhost:1313/tags/python/</guid>
+      <guid>/tags/python/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>Delta2</title>
-      <link>//localhost:1313/tags/delta2/</link>
+      <link>/tags/delta2/</link>
       <pubDate>Sun, 10 Nov 2024 16:56:20 -0700</pubDate>
       
-      <guid>//localhost:1313/tags/delta2/</guid>
+      <guid>/tags/delta2/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>Hello</title>
-      <link>//localhost:1313/tags/hello/</link>
+      <link>/tags/hello/</link>
       <pubDate>Fri, 08 Nov 2024 23:55:59 -0700</pubDate>
       
-      <guid>//localhost:1313/tags/hello/</guid>
+      <guid>/tags/hello/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>Posts</title>
-      <link>//localhost:1313/tags/posts/</link>
+      <link>/tags/posts/</link>
       <pubDate>Fri, 08 Nov 2024 23:55:59 -0700</pubDate>
       
-      <guid>//localhost:1313/tags/posts/</guid>
+      <guid>/tags/posts/</guid>
       <description></description>
       <content></content>
     </item>
