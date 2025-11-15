@@ -2,62 +2,71 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/</loc>
+    <loc>//localhost:1313/</loc>
     <lastmod>2025-03-20T14:17:56-07:00</lastmod>
   </url><url>
-    <loc>/tags/go/</loc>
+    <loc>//localhost:1313/tags/go/</loc>
     <lastmod>2025-03-20T14:17:56-07:00</lastmod>
   </url><url>
-    <loc>/tags/new/</loc>
+    <loc>//localhost:1313/tags/new/</loc>
     <lastmod>2025-03-20T14:17:56-07:00</lastmod>
   </url><url>
-    <loc>/posts/</loc>
+    <loc>//localhost:1313/posts/</loc>
     <lastmod>2025-03-20T14:17:56-07:00</lastmod>
   </url><url>
-    <loc>/tags/</loc>
+    <loc>//localhost:1313/tags/</loc>
     <lastmod>2025-03-20T14:17:56-07:00</lastmod>
   </url><url>
-    <loc>/tags/windows/</loc>
+    <loc>//localhost:1313/tags/windows/</loc>
     <lastmod>2025-03-20T14:17:56-07:00</lastmod>
   </url><url>
-    <loc>/posts/windowstokens/</loc>
+    <loc>//localhost:1313/posts/windowstokens/</loc>
     <lastmod>2025-03-20T14:17:56-07:00</lastmod>
   </url><url>
-    <loc>/posts/winregistrysecrets/</loc>
+    <loc>//localhost:1313/posts/winregistrysecrets/</loc>
     <lastmod>2025-03-20T13:50:08-07:00</lastmod>
   </url><url>
-    <loc>/tags/c2/</loc>
+    <loc>//localhost:1313/tags/c2/</loc>
     <lastmod>2024-11-11T17:31:31-07:00</lastmod>
   </url><url>
-    <loc>/tags/cybersecurity/</loc>
+    <loc>//localhost:1313/tags/cybersecurity/</loc>
     <lastmod>2024-11-11T17:31:31-07:00</lastmod>
   </url><url>
-    <loc>/posts/mothership_c2/</loc>
+    <loc>//localhost:1313/tags/malware/</loc>
     <lastmod>2024-11-11T17:31:31-07:00</lastmod>
   </url><url>
-    <loc>/tags/projects/</loc>
+    <loc>//localhost:1313/posts/malware101/</loc>
     <lastmod>2024-11-11T17:31:31-07:00</lastmod>
   </url><url>
-    <loc>/tags/python/</loc>
+    <loc>//localhost:1313/posts/mothership_c2/</loc>
     <lastmod>2024-11-11T17:31:31-07:00</lastmod>
   </url><url>
-    <loc>/posts/delta2/</loc>
+    <loc>//localhost:1313/tags/notes/</loc>
+    <lastmod>2024-11-11T17:31:31-07:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/tags/projects/</loc>
+    <lastmod>2024-11-11T17:31:31-07:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/tags/python/</loc>
+    <lastmod>2024-11-11T17:31:31-07:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/posts/delta2/</loc>
     <lastmod>2024-11-10T16:56:20-07:00</lastmod>
   </url><url>
-    <loc>/tags/delta2/</loc>
+    <loc>//localhost:1313/tags/delta2/</loc>
     <lastmod>2024-11-10T16:56:20-07:00</lastmod>
   </url><url>
-    <loc>/posts/hello/</loc>
+    <loc>//localhost:1313/posts/hello/</loc>
     <lastmod>2024-11-08T23:55:59-07:00</lastmod>
   </url><url>
-    <loc>/tags/hello/</loc>
+    <loc>//localhost:1313/tags/hello/</loc>
     <lastmod>2024-11-08T23:55:59-07:00</lastmod>
   </url><url>
-    <loc>/tags/posts/</loc>
+    <loc>//localhost:1313/tags/posts/</loc>
     <lastmod>2024-11-08T23:55:59-07:00</lastmod>
   </url><url>
-    <loc>/about/</loc>
+    <loc>//localhost:1313/about/</loc>
   </url><url>
-    <loc>/categories/</loc>
+    <loc>//localhost:1313/categories/</loc>
   </url>
 </urlset>

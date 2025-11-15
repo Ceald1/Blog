@@ -2,17 +2,436 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ceald&#39;s blog</title>
-    <link>/</link>
+    <link>//localhost:1313/</link>
     <description>Recent content on Ceald&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 20 Mar 2025 14:17:56 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 14 Nov 2025 18:20:01 -0700</lastBuildDate><atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Malware101</title>
+      <link>//localhost:1313/posts/malware101/</link>
+      <pubDate>Fri, 14 Nov 2025 18:20:01 -0700</pubDate>
+      
+      <guid>//localhost:1313/posts/malware101/</guid>
+      <description>&lt;h1 id=&#34;summary&#34;&gt;Summary&lt;/h1&gt;
+&lt;p&gt;My notes while learning malware development for Windows.&lt;/p&gt;
+&lt;h1 id=&#34;malware-types&#34;&gt;Malware types&lt;/h1&gt;
+&lt;h2 id=&#34;rat&#34;&gt;RAT&lt;/h2&gt;
+&lt;p&gt;persistent connection to a machine to monitor things like key strokes.&lt;/p&gt;
+&lt;h2 id=&#34;infostealers&#34;&gt;Infostealers&lt;/h2&gt;
+&lt;p&gt;targets sensitive information like medical records or banking information&lt;/p&gt;
+&lt;h2 id=&#34;droppers-and-loaders&#34;&gt;Droppers and loaders&lt;/h2&gt;
+&lt;p&gt;Deploy additional malware through a web request.&lt;/p&gt;
+&lt;h2 id=&#34;ransomware&#34;&gt;Ransomware&lt;/h2&gt;
+&lt;p&gt;Denies access to a person&amp;rsquo;s computer for a ransom.&lt;/p&gt;
+&lt;h2 id=&#34;wipers&#34;&gt;Wipers&lt;/h2&gt;
+&lt;p&gt;Destroys sensitive information or entire systems.&lt;/p&gt;
+&lt;h2 id=&#34;worms&#34;&gt;Worms&lt;/h2&gt;
+&lt;p&gt;Self spreading malware.&lt;/p&gt;
+&lt;h2 id=&#34;viruses&#34;&gt;Viruses&lt;/h2&gt;
+&lt;p&gt;Adds malicious code onto a host system&amp;rsquo;s files.&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;summary&#34;&gt;Summary&lt;/h1&gt;
+&lt;p&gt;My notes while learning malware development for Windows.&lt;/p&gt;
+&lt;h1 id=&#34;malware-types&#34;&gt;Malware types&lt;/h1&gt;
+&lt;h2 id=&#34;rat&#34;&gt;RAT&lt;/h2&gt;
+&lt;p&gt;persistent connection to a machine to monitor things like key strokes.&lt;/p&gt;
+&lt;h2 id=&#34;infostealers&#34;&gt;Infostealers&lt;/h2&gt;
+&lt;p&gt;targets sensitive information like medical records or banking information&lt;/p&gt;
+&lt;h2 id=&#34;droppers-and-loaders&#34;&gt;Droppers and loaders&lt;/h2&gt;
+&lt;p&gt;Deploy additional malware through a web request.&lt;/p&gt;
+&lt;h2 id=&#34;ransomware&#34;&gt;Ransomware&lt;/h2&gt;
+&lt;p&gt;Denies access to a person&amp;rsquo;s computer for a ransom.&lt;/p&gt;
+&lt;h2 id=&#34;wipers&#34;&gt;Wipers&lt;/h2&gt;
+&lt;p&gt;Destroys sensitive information or entire systems.&lt;/p&gt;
+&lt;h2 id=&#34;worms&#34;&gt;Worms&lt;/h2&gt;
+&lt;p&gt;Self spreading malware.&lt;/p&gt;
+&lt;h2 id=&#34;viruses&#34;&gt;Viruses&lt;/h2&gt;
+&lt;p&gt;Adds malicious code onto a host system&amp;rsquo;s files.&lt;/p&gt;
+&lt;h2 id=&#34;rootkits-and-bootkits&#34;&gt;Rootkits and Bootkits&lt;/h2&gt;
+&lt;p&gt;Malware that conceals itself in the kernel or in the BIOS. Rootkits run at system startup while Bootkits start at boot time.&lt;/p&gt;
+&lt;h2 id=&#34;trojans&#34;&gt;Trojans&lt;/h2&gt;
+&lt;p&gt;Pretend to be legit programs to infect a system.&lt;/p&gt;
+&lt;h3 id=&#34;notes&#34;&gt;Notes:&lt;/h3&gt;
+&lt;p&gt;Sophisticated malware will be able to detect tools trying to analyze it by checking processes running or if it&amp;rsquo;s in a virtual machine.&lt;/p&gt;
+&lt;h1 id=&#34;windows-101&#34;&gt;Windows 101&lt;/h1&gt;
+&lt;h2 id=&#34;concepts&#34;&gt;Concepts&lt;/h2&gt;
+&lt;h3 id=&#34;user-mode-vs-kernel-mode&#34;&gt;User mode vs Kernel mode&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;//localhost:1313/malware101/kernel_user_mode.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;windows-apiwinapi&#34;&gt;Windows API/WinAPI&lt;/h3&gt;
+&lt;p&gt;various functions for programs to interact with to function&lt;/p&gt;
+&lt;h3 id=&#34;drivers&#34;&gt;Drivers&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Provide an abstraction layer between the actual kernel and user (kernel level anti cheats are drivers)&lt;/li&gt;
+&lt;li&gt;Drivers can be ran in user mode or Kernel mode&lt;/li&gt;
+&lt;li&gt;Kernel mode have FULL access to the kernel&lt;/li&gt;
+&lt;li&gt;User mode drivers are restricted&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;hardware-abstraction-layer&#34;&gt;Hardware abstraction Layer&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Interface for hardware to interact with the rest of the system.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;kernel&#34;&gt;Kernel&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Kernel is the &amp;ldquo;magic&amp;rdquo; of this system by having the utilities for everything to communicate and run (somewhat) effectively by handling memory management and other complex tasks.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;processes-and-threads&#34;&gt;Processes and Threads&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Processes are applications&lt;/li&gt;
+&lt;li&gt;Threads are instructions for that process (processes can have more than one thread)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;objects-and-handles&#34;&gt;Objects and Handles&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Objects are resources like resources (files, tokens, another process, or thread)&lt;/li&gt;
+&lt;li&gt;Handles are identifiers for those processes or objects a program is trying to access
+&lt;img src=&#34;//localhost:1313/malware101/handles_objects.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;Mutexe (Mutual exclusions) control access to objects to prevent system crashes or other issues.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;windows-api&#34;&gt;Windows API&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;WinAPI is a library of various functions&lt;/li&gt;
+&lt;li&gt;API helps with things from security authentication to even showing a message box&lt;/li&gt;
+&lt;li&gt;Docs are notoriously bad&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;windows-native-api&#34;&gt;Windows Native API&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;a lower level windows API&lt;/li&gt;
+&lt;li&gt;undocumented by MS
+&lt;a href=&#34;http://undocumented.ntinternals.net/&#34;&gt;http://undocumented.ntinternals.net/&lt;/a&gt;
+&lt;a href=&#34;https://www.geoffchappell.com/studies/windows/win32/ntdll/api/native.htm&#34;&gt;https://www.geoffchappell.com/studies/windows/win32/ntdll/api/native.htm&lt;/a&gt;
+&lt;img src=&#34;//localhost:1313/malware101/api.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;api-functions&#34;&gt;API Functions:&lt;/h2&gt;
+&lt;p&gt;(&lt;a href=&#34;https://wsummerhill.github.io/redteam/2024/02/06/Malware-Development-Introduction-Part1.html&#34;&gt;https://wsummerhill.github.io/redteam/2024/02/06/Malware-Development-Introduction-Part1.html&lt;/a&gt;)&lt;/p&gt;
+&lt;h4 id=&#34;notes-1&#34;&gt;Notes&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;API functions have various suffixes.
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Ex&lt;/code&gt; means newer&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;A&lt;/code&gt; outputs and inputs in ANSI format (&lt;a href=&#34;https://ansi.tools/&#34;&gt;https://ansi.tools/&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;W&lt;/code&gt; outputs and inputs in unicode format (&lt;a href=&#34;https://gist.github.com/jpassaro/bf400b0410810a071a7fb3509ef6c2c3&#34;&gt;https://gist.github.com/jpassaro/bf400b0410810a071a7fb3509ef6c2c3&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Native API functions have prefixes.  &lt;a href=&#34;https://stackoverflow.com/questions/4770553/windows-native-api-when-and-why-use-zw-vs-nt-prefixed-api-calls#4770583&#34;&gt;https://stackoverflow.com/questions/4770553/windows-native-api-when-and-why-use-zw-vs-nt-prefixed-api-calls#4770583&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Zw&lt;/code&gt; are for kernel mode drivers&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Nt&lt;/code&gt; are for user mode applications&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;DLLs are libraries that contain these functions
+&lt;ul&gt;
+&lt;li&gt;kernel32.dll
+&lt;ul&gt;
+&lt;li&gt;Contains fundamental user mode functions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;user32.dll
+&lt;ul&gt;
+&lt;li&gt;For gui applications&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Winhttp.dll
+&lt;ul&gt;
+&lt;li&gt;For internet functions for windows programs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;ntdll.dll
+&lt;ul&gt;
+&lt;li&gt;Synchronization, threading and other system tasks that communicate with the kernel&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;kernelbase.dll
+&lt;ul&gt;
+&lt;li&gt;For backwards compatibility for windows apps&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;virtualalloc&#34;&gt;VirtualAlloc&lt;/h3&gt;
+&lt;p&gt;used for allocating memory in windows for low level API operations&lt;/p&gt;
+&lt;h3 id=&#34;rtlmovememorymemcpycc&#34;&gt;RtlMoveMemory/memcpy(C/C++)&lt;/h3&gt;
+&lt;p&gt;copy memory from one source to another&lt;/p&gt;
+&lt;h3 id=&#34;virtualprotect&#34;&gt;VirtualProtect&lt;/h3&gt;
+&lt;p&gt;change memory protections&lt;/p&gt;
+&lt;h3 id=&#34;createthreatwaitforsingleobject&#34;&gt;CreateThreat/WaitForSingleObject&lt;/h3&gt;
+&lt;p&gt;Create new thread in the current process. &lt;code&gt;WaitForSingleObject&lt;/code&gt; called after &lt;code&gt;CreateThreat&lt;/code&gt; to delay execution until a previous thread is completed.&lt;/p&gt;
+&lt;h3 id=&#34;process-internals&#34;&gt;Process Internals&lt;/h3&gt;
+&lt;p&gt;Processes point to additional data structures. It provides additional information for windows to understand and manage processes&lt;/p&gt;
+&lt;h4 id=&#34;eprocess-structure&#34;&gt;EPROCESS Structure&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&#34;//localhost:1313/malware101/eprocess.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;This is how windows processes are understood by the kernel.&lt;/li&gt;
+&lt;li&gt;EPROCESS structures:
+&lt;ul&gt;
+&lt;li&gt;PEB (process environment block)
+&lt;ul&gt;
+&lt;li&gt;contains essential information for the process&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Forward Links (Flink)
+&lt;ul&gt;
+&lt;li&gt;chains to the Blink&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Backward Links (Blink)
+&lt;ul&gt;
+&lt;li&gt;links backwards to the Flink&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Links just link processes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;peb-structure-offsets-and-data&#34;&gt;PEB Structure Offsets and Data&lt;/h4&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Offset (x86)&lt;/th&gt;
+          &lt;th&gt;Offset (x64)&lt;/th&gt;
+          &lt;th&gt;Data&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;0x002&lt;/td&gt;
+          &lt;td&gt;0x002&lt;/td&gt;
+          &lt;td&gt;Stores the BeingDebugged value, which indicates whether the process is running under the context of a debugger.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;0x008&lt;/td&gt;
+          &lt;td&gt;0x10&lt;/td&gt;
+          &lt;td&gt;Stores the base address of the process executable in memory.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;0x00C&lt;/td&gt;
+          &lt;td&gt;0x18&lt;/td&gt;
+          &lt;td&gt;Stores information on the modules and libraries the process has loaded.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;0x018&lt;/td&gt;
+          &lt;td&gt;0x30&lt;/td&gt;
+          &lt;td&gt;Stores information about the process’s memory heap.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;0x064&lt;/td&gt;
+          &lt;td&gt;0xB8&lt;/td&gt;
+          &lt;td&gt;Stores the NumberOfProcessors value, which indicates the number of processors the system has.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;teb-thread-environment-block-aka-tib-thread-information-block&#34;&gt;TEB (Thread Environment Block aka TIB Thread Information Block)&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Contains Information for process&amp;rsquo;s running threads&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Offset (x86)&lt;/th&gt;
+          &lt;th&gt;Offset (x64)&lt;/th&gt;
+          &lt;th&gt;Data&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;FS:[0x00]&lt;/td&gt;
+          &lt;td&gt;GS:[0x00]&lt;/td&gt;
+          &lt;td&gt;Stores the current structured exception handler (SEH) frame.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;FS:[0x04]&lt;/td&gt;
+          &lt;td&gt;GS:[0x08]&lt;/td&gt;
+          &lt;td&gt;Points to the base of the thread’s stack.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;FS:[0x18]&lt;/td&gt;
+          &lt;td&gt;GS:[0x30]&lt;/td&gt;
+          &lt;td&gt;Points to the TEB itself.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;FS:[0x20]&lt;/td&gt;
+          &lt;td&gt;GS:[0x40]&lt;/td&gt;
+          &lt;td&gt;Stores the process ID (PID) of the thread’s owning process.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;FS:[0x24]&lt;/td&gt;
+          &lt;td&gt;GS:[0x48]&lt;/td&gt;
+          &lt;td&gt;Stores the thread ID (TID) of the current thread.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;FS:[0x30]&lt;/td&gt;
+          &lt;td&gt;GS:[0x60]&lt;/td&gt;
+          &lt;td&gt;Points to the PEB of the thread’s owning process.&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;FS:[0xE10]&lt;/td&gt;
+          &lt;td&gt;GS:[0x1480]&lt;/td&gt;
+          &lt;td&gt;Points to thread-local storage (TLS) information.&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;stacks-and-heaps&#34;&gt;Stacks and Heaps&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Stack is where temporary data is stored (destroyed after a thread is done)&lt;/li&gt;
+&lt;li&gt;Heap is a large region used to dynamically store memory at runtime (global variables, etc.)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;virtual-memory&#34;&gt;Virtual Memory&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;In windows processes have virtual memory allocated to them that are mapped to the RAM&lt;/li&gt;
+&lt;li&gt;Solves process interference or programs crashing
+&lt;img src=&#34;//localhost:1313/malware101/pager.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;If a process has too little RAM for a process it&amp;rsquo;ll page/store it on disk (like a Linux swapfile or partition)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;pe-files&#34;&gt;PE Files&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Essentially the windows version of &lt;code&gt;elf&lt;/code&gt; files&lt;/li&gt;
+&lt;li&gt;Contain headers and sections
+&lt;ul&gt;
+&lt;li&gt;Headers are metadata&lt;/li&gt;
+&lt;li&gt;DOS Headers are for older versions of windows&lt;/li&gt;
+&lt;li&gt;PE header contains information used by the Windows PE Loader&lt;/li&gt;
+&lt;li&gt;Section header contains metadata related to file sections (size, address, etc.)&lt;/li&gt;
+&lt;li&gt;Common sections in table bellow&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Section&lt;/th&gt;
+          &lt;th&gt;Description&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;.text&lt;/td&gt;
+          &lt;td&gt;The file’s main executable code&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;.rdata&lt;/td&gt;
+          &lt;td&gt;Read-only data, such as static variables and constants&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;.bss&lt;/td&gt;
+          &lt;td&gt;Uninitialized data, such as variables that haven’t been assigned a value yet&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;.data&lt;/td&gt;
+          &lt;td&gt;Variables not embedded in the .rdata and .bss sections, such as global variables&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;.rsrc&lt;/td&gt;
+          &lt;td&gt;Assets that will be loaded by the executable at runtime, such as images, fonts, and other supporting files&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;.idata&lt;/td&gt;
+          &lt;td&gt;The imports address table&lt;!-- raw HTML omitted --&gt;* information about imports used by the PE file&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;.edata&lt;/td&gt;
+          &lt;td&gt;The exports address table&lt;!-- raw HTML omitted --&gt;* information about exports used by the PE file&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;pe-loading-process&#34;&gt;PE Loading Process&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;Windows makes a new EPROCESS structure&lt;/li&gt;
+&lt;li&gt;Windows allocates virtual memory to the process&lt;/li&gt;
+&lt;li&gt;PE Loader reads and parses the DOS, PE, and optional headers&lt;/li&gt;
+&lt;li&gt;PE Parses all the other headers&lt;/li&gt;
+&lt;li&gt;Loads libraries associated with the PE (&lt;code&gt;.idata&lt;/code&gt; and or &lt;code&gt;.rdata&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;New thread is created inside the process (&lt;code&gt;.text&lt;/code&gt; section)
+&lt;img src=&#34;//localhost:1313/malware101/pe.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;address-space-layout-randomization-aslr&#34;&gt;Address Space Layout Randomization (ASLR)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;prevents memory corruption&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;registry&#34;&gt;Registry&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;A database that applications and the OS reads and stores configurations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;hives&#34;&gt;Hives&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;HKEY_LOCAL_MACHINE (HKLM)
+&lt;ul&gt;
+&lt;li&gt;Low level OS&lt;/li&gt;
+&lt;li&gt;Hardware configurations&lt;/li&gt;
+&lt;li&gt;Security Policies&lt;/li&gt;
+&lt;li&gt;Account settings&lt;/li&gt;
+&lt;li&gt;Settings for software installed&lt;/li&gt;
+&lt;li&gt;SAM database&lt;/li&gt;
+&lt;li&gt;LSA Secrets&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;HKEY_CURRENT_USER (HKCU)
+&lt;ul&gt;
+&lt;li&gt;user and system configurations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;HKEY_USERS (HKU)
+&lt;ul&gt;
+&lt;li&gt;User settings&lt;/li&gt;
+&lt;li&gt;Stores the information for every user on the system&lt;/li&gt;
+&lt;li&gt;Sub keys represent identifiers of every user&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;HKEY_CURRENT_CONFIG (HKCC)
+&lt;ul&gt;
+&lt;li&gt;Pounters to the &lt;code&gt;HKLM&lt;/code&gt; key for hardware profiles&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;HKEY_CLASSES_ROOT (HKCR)
+&lt;ul&gt;
+&lt;li&gt;registered application information like default apps to open files&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;terms-101&#34;&gt;Terms 101&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Shellcode: code that executes regardless of where it is in memory (&lt;a href=&#34;https://medium.com/@yua.mikanana19/position-independent-code-pic-and-shellcode-an-introduction-1ea71f707ad&#34;&gt;https://medium.com/@yua.mikanana19/position-independent-code-pic-and-shellcode-an-introduction-1ea71f707ad&lt;/a&gt;)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Malware analysis: analyze malware behavior and signatures to identify the threat actor(s).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;EDR(endpoint detection and response): A stack of software for protecting endpoints like domain controllers or critical infrastructure.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;XDR(extended detection and response): A stack of software like an EDR but offers more detection, data sources, and security tools.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;DKOM: Direct kernel object modification&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;DCOM: Distributed component object model extends COM objects for remote procedure calls and references&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;COM: component object model is for allowing applications to share and distribute data regardless of programming language&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
     <item>
       <title>Windows-Tokens</title>
-      <link>/posts/windowstokens/</link>
+      <link>//localhost:1313/posts/windowstokens/</link>
       <pubDate>Thu, 20 Mar 2025 14:17:56 -0700</pubDate>
       
-      <guid>/posts/windowstokens/</guid>
+      <guid>//localhost:1313/posts/windowstokens/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
 &lt;p&gt;In windows things like access permissions are handled with tokens. Think of them as API tokens, they have certain permissions that you can do like impersonate other users or enable debugging on windows. The things that will be looked at in this post is how you can use windows tokens to get lower permissions than the Administrator user.&lt;/p&gt;
 &lt;h2 id=&#34;stealing-tokens-via-windows-processes&#34;&gt;Stealing Tokens Via Windows Processes&lt;/h2&gt;
@@ -77,10 +496,10 @@
     
     <item>
       <title>Win-Registry-Secrets</title>
-      <link>/posts/winregistrysecrets/</link>
+      <link>//localhost:1313/posts/winregistrysecrets/</link>
       <pubDate>Thu, 20 Mar 2025 13:50:08 -0700</pubDate>
       
-      <guid>/posts/winregistrysecrets/</guid>
+      <guid>//localhost:1313/posts/winregistrysecrets/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;
 &lt;p&gt;The windows registry is a system database that contains keys and values. Some things in the registry include; Windows credentials, cached passwords, usernames, and other credentials. In windows a group of keys is called a &amp;ldquo;hive&amp;rdquo; the hives that are the cool ones are; SAM, System, and Security.&lt;/p&gt;
 &lt;h2 id=&#34;system-hive&#34;&gt;SYSTEM Hive&lt;/h2&gt;
@@ -137,10 +556,10 @@
     
     <item>
       <title>Mothership_c2</title>
-      <link>/posts/mothership_c2/</link>
+      <link>//localhost:1313/posts/mothership_c2/</link>
       <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
       
-      <guid>/posts/mothership_c2/</guid>
+      <guid>//localhost:1313/posts/mothership_c2/</guid>
       <description>&lt;h2 id=&#34;description&#34;&gt;Description:&lt;/h2&gt;
 &lt;p&gt;Mothership C2 is my command and control server for managing and interacting with shell connections.&lt;/p&gt;
 &lt;h2 id=&#34;features&#34;&gt;Features:&lt;/h2&gt;
@@ -161,11 +580,11 @@
 &lt;/ul&gt;
 &lt;h2 id=&#34;what-is-a-c2&#34;&gt;What is a C2?&lt;/h2&gt;
 &lt;p&gt;A C2 server is a Command and Control server, it helps with controlling and commanding shell connections. C2 servers are used by APTs (advanced persistent threats) and by red teams&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/C2.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;//localhost:1313/C2.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;That&amp;rsquo;s how they work simplified. There&amp;rsquo;s much more that they can do like handle multiple connections at once or support encryption.&lt;/p&gt;
 &lt;h2 id=&#34;how-does-mothership-work&#34;&gt;How Does Mothership Work?&lt;/h2&gt;
 &lt;p&gt;Mothership supports encryption unlike some other C2s and uses a unique form of authentication to prevent invalid agents from connecting. A diagram of how the authentication works.
-&lt;img src=&#34;/C2Auth.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;img src=&#34;//localhost:1313/C2Auth.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;First the client creates a new agent ID&lt;/li&gt;
 &lt;li&gt;Agent is ran on the target with the API URL and the hashed agent ID&lt;/li&gt;
@@ -181,10 +600,10 @@
     
     <item>
       <title>Delta2</title>
-      <link>/posts/delta2/</link>
+      <link>//localhost:1313/posts/delta2/</link>
       <pubDate>Sun, 10 Nov 2024 16:56:20 -0700</pubDate>
       
-      <guid>/posts/delta2/</guid>
+      <guid>//localhost:1313/posts/delta2/</guid>
       <description>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
 &lt;p&gt;Delta2 is an API that is a Swiss army knife for active directory. I wrote this project because I was sick of having to set up java and remembering how to use bloodhound python for doing active directory boxes on HackTheBox, so I wrote my own. Delta2&amp;rsquo;s primary use is automation like automate kerberoasting after mapping the domain or getting shortest paths to admin users and exploiting the necessary users to get to admin users.&lt;/p&gt;</description>
       <content>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -267,10 +686,10 @@
     
     <item>
       <title>Hello</title>
-      <link>/posts/hello/</link>
+      <link>//localhost:1313/posts/hello/</link>
       <pubDate>Fri, 08 Nov 2024 23:55:59 -0700</pubDate>
       
-      <guid>/posts/hello/</guid>
+      <guid>//localhost:1313/posts/hello/</guid>
       <description>&lt;h2 id=&#34;hello-world&#34;&gt;Hello World!!&lt;/h2&gt;</description>
       <content>&lt;h2 id=&#34;hello-world&#34;&gt;Hello World!!&lt;/h2&gt;
 </content>
@@ -278,15 +697,15 @@
     
     <item>
       <title></title>
-      <link>/about/</link>
+      <link>//localhost:1313/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/about/</guid>
+      <guid>//localhost:1313/about/</guid>
       <description>&lt;h1 id=&#34;about-me&#34;&gt;About Me&lt;/h1&gt;
-&lt;p&gt;&lt;img src=&#34;/avatar.png&#34; alt=&#34;&#34;&gt;
+&lt;p&gt;&lt;img src=&#34;//localhost:1313/avatar.png&#34; alt=&#34;&#34;&gt;
 Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools/projects sometimes. I know python and a bit of Golang&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;about-me&#34;&gt;About Me&lt;/h1&gt;
-&lt;p&gt;&lt;img src=&#34;/avatar.png&#34; alt=&#34;&#34;&gt;
+&lt;p&gt;&lt;img src=&#34;//localhost:1313/avatar.png&#34; alt=&#34;&#34;&gt;
 Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools/projects sometimes. I know python and a bit of Golang&lt;/p&gt;
 </content>
     </item>
