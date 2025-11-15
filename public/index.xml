@@ -54,7 +54,7 @@
 &lt;h3 id=&#34;notes&#34;&gt;Notes:&lt;/h3&gt;
 &lt;p&gt;Sophisticated malware will be able to detect tools trying to analyze it by checking processes running or if it&amp;rsquo;s in a virtual machine.&lt;/p&gt;
 &lt;h1 id=&#34;windows-101&#34;&gt;Windows 101&lt;/h1&gt;
-&lt;h2 id=&#34;concepts&#34;&gt;Concepts&lt;/h2&gt;
+&lt;h2 id=&#34;conceptsessentials&#34;&gt;Concepts/Essentials&lt;/h2&gt;
 &lt;h3 id=&#34;user-mode-vs-kernel-mode&#34;&gt;User mode vs Kernel mode&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&#34;//localhost:1313/malware101/kernel_user_mode.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;windows-apiwinapi&#34;&gt;Windows API/WinAPI&lt;/h3&gt;
@@ -100,9 +100,9 @@
 &lt;a href=&#34;https://www.geoffchappell.com/studies/windows/win32/ntdll/api/native.htm&#34;&gt;https://www.geoffchappell.com/studies/windows/win32/ntdll/api/native.htm&lt;/a&gt;
 &lt;img src=&#34;//localhost:1313/malware101/api.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;api-functions&#34;&gt;API Functions:&lt;/h2&gt;
+&lt;h4 id=&#34;api-functions&#34;&gt;API Functions:&lt;/h4&gt;
 &lt;p&gt;(&lt;a href=&#34;https://wsummerhill.github.io/redteam/2024/02/06/Malware-Development-Introduction-Part1.html&#34;&gt;https://wsummerhill.github.io/redteam/2024/02/06/Malware-Development-Introduction-Part1.html&lt;/a&gt;)&lt;/p&gt;
-&lt;h4 id=&#34;notes-1&#34;&gt;Notes&lt;/h4&gt;
+&lt;h5 id=&#34;notes-1&#34;&gt;Notes&lt;/h5&gt;
 &lt;ul&gt;
 &lt;li&gt;API functions have various suffixes.
 &lt;ul&gt;
@@ -147,13 +147,13 @@
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;virtualalloc&#34;&gt;VirtualAlloc&lt;/h3&gt;
+&lt;h5 id=&#34;virtualalloc&#34;&gt;VirtualAlloc&lt;/h5&gt;
 &lt;p&gt;used for allocating memory in windows for low level API operations&lt;/p&gt;
-&lt;h3 id=&#34;rtlmovememorymemcpycc&#34;&gt;RtlMoveMemory/memcpy(C/C++)&lt;/h3&gt;
+&lt;h5 id=&#34;rtlmovememorymemcpycc&#34;&gt;RtlMoveMemory/memcpy(C/C++)&lt;/h5&gt;
 &lt;p&gt;copy memory from one source to another&lt;/p&gt;
-&lt;h3 id=&#34;virtualprotect&#34;&gt;VirtualProtect&lt;/h3&gt;
+&lt;h5 id=&#34;virtualprotect&#34;&gt;VirtualProtect&lt;/h5&gt;
 &lt;p&gt;change memory protections&lt;/p&gt;
-&lt;h3 id=&#34;createthreatwaitforsingleobject&#34;&gt;CreateThreat/WaitForSingleObject&lt;/h3&gt;
+&lt;h5 id=&#34;createthreatwaitforsingleobject&#34;&gt;CreateThreat/WaitForSingleObject&lt;/h5&gt;
 &lt;p&gt;Create new thread in the current process. &lt;code&gt;WaitForSingleObject&lt;/code&gt; called after &lt;code&gt;CreateThreat&lt;/code&gt; to delay execution until a previous thread is completed.&lt;/p&gt;
 &lt;h3 id=&#34;process-internals&#34;&gt;Process Internals&lt;/h3&gt;
 &lt;p&gt;Processes point to additional data structures. It provides additional information for windows to understand and manage processes&lt;/p&gt;
@@ -217,11 +217,6 @@
           &lt;td&gt;0xB8&lt;/td&gt;
           &lt;td&gt;Stores the NumberOfProcessors value, which indicates the number of processors the system has.&lt;/td&gt;
       &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-      &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h4 id=&#34;teb-thread-environment-block-aka-tib-thread-information-block&#34;&gt;TEB (Thread Environment Block aka TIB Thread Information Block)&lt;/h4&gt;
@@ -274,19 +269,19 @@
       &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h3 id=&#34;stacks-and-heaps&#34;&gt;Stacks and Heaps&lt;/h3&gt;
+&lt;h4 id=&#34;stacks-and-heaps&#34;&gt;Stacks and Heaps&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;Stack is where temporary data is stored (destroyed after a thread is done)&lt;/li&gt;
 &lt;li&gt;Heap is a large region used to dynamically store memory at runtime (global variables, etc.)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;virtual-memory&#34;&gt;Virtual Memory&lt;/h3&gt;
+&lt;h4 id=&#34;virtual-memory&#34;&gt;Virtual Memory&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;In windows processes have virtual memory allocated to them that are mapped to the RAM&lt;/li&gt;
 &lt;li&gt;Solves process interference or programs crashing
 &lt;img src=&#34;//localhost:1313/malware101/pager.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
 &lt;li&gt;If a process has too little RAM for a process it&amp;rsquo;ll page/store it on disk (like a Linux swapfile or partition)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;pe-files&#34;&gt;PE Files&lt;/h3&gt;
+&lt;h4 id=&#34;pe-files&#34;&gt;PE Files&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;Essentially the windows version of &lt;code&gt;elf&lt;/code&gt; files&lt;/li&gt;
 &lt;li&gt;Contain headers and sections
@@ -335,14 +330,6 @@
           &lt;td&gt;.edata&lt;/td&gt;
           &lt;td&gt;The exports address table&lt;!-- raw HTML omitted --&gt;* information about exports used by the PE file&lt;/td&gt;
       &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-      &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h4 id=&#34;pe-loading-process&#34;&gt;PE Loading Process&lt;/h4&gt;
@@ -355,15 +342,15 @@
 &lt;li&gt;New thread is created inside the process (&lt;code&gt;.text&lt;/code&gt; section)
 &lt;img src=&#34;//localhost:1313/malware101/pe.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h2 id=&#34;address-space-layout-randomization-aslr&#34;&gt;Address Space Layout Randomization (ASLR)&lt;/h2&gt;
+&lt;h3 id=&#34;address-space-layout-randomization-aslr&#34;&gt;Address Space Layout Randomization (ASLR)&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;prevents memory corruption&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;registry&#34;&gt;Registry&lt;/h2&gt;
+&lt;h3 id=&#34;registry&#34;&gt;Registry&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;A database that applications and the OS reads and stores configurations&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;hives&#34;&gt;Hives&lt;/h3&gt;
+&lt;h4 id=&#34;hives&#34;&gt;Hives&lt;/h4&gt;
 &lt;ol&gt;
 &lt;li&gt;HKEY_LOCAL_MACHINE (HKLM)
 &lt;ul&gt;
