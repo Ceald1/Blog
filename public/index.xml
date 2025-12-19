@@ -16,6 +16,8 @@
       <description>malware notes</description>
       <content>&lt;h1 id=&#34;summary&#34;&gt;Summary&lt;/h1&gt;
 &lt;p&gt;My notes while learning malware development for Windows.&lt;/p&gt;
+&lt;h2 id=&#34;note-for-the-reader&#34;&gt;Note For The Reader:&lt;/h2&gt;
+&lt;p&gt;These are NOT up to date &amp;ldquo;how to build super haxxor l33t 1337 malware notes/tutorials&amp;rdquo; these are simply notes on the fundamentals/references. Maybe in the future modern malware techniques will be added. Things evolve too fast for consistent notes and same with evasion techniques so don&amp;rsquo;t expect these notes to be super up to date.&lt;/p&gt;
 &lt;h1 id=&#34;malware-types&#34;&gt;Malware types&lt;/h1&gt;
 &lt;h2 id=&#34;notes&#34;&gt;Notes:&lt;/h2&gt;
 &lt;ul&gt;
@@ -374,7 +376,7 @@
 &lt;/li&gt;
 &lt;li&gt;HKEY_CURRENT_CONFIG (HKCC)
 &lt;ul&gt;
-&lt;li&gt;Pounters to the &lt;code&gt;HKLM&lt;/code&gt; key for hardware profiles&lt;/li&gt;
+&lt;li&gt;Pointers to the &lt;code&gt;HKLM&lt;/code&gt; key for hardware profiles&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;HKEY_CLASSES_ROOT (HKCR)
@@ -409,7 +411,82 @@
 &lt;li&gt;Write the memory to the process with &lt;a href=&#34;https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory&#34;&gt;&lt;code&gt;WriteProcessMemory&lt;/code&gt;&lt;/a&gt; or &lt;a href=&#34;https://ntdoc.m417z.com/ntwritevirtualmemory&#34;&gt;&lt;code&gt;NtWriteVirtualMemory&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Call &lt;a href=&#34;https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createremotethread&#34;&gt;&lt;code&gt;CreateRemoteThread&lt;/code&gt;&lt;/a&gt;, &lt;a href=&#34;https://ntdoc.m417z.com/ntcreatethreadex&#34;&gt;&lt;code&gt;NtCreateThreadEx&lt;/code&gt;&lt;/a&gt; or &lt;a href=&#34;https://ntdoc.m417z.com/rtlcreateuserthread&#34;&gt;&lt;code&gt;RtlCreateUserThread&lt;/code&gt;&lt;/a&gt; and input the proper options.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h3 id=&#34;dll-injection&#34;&gt;DLL Injection&lt;/h3&gt;
+&lt;h4 id=&#34;example&#34;&gt;Example:&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-zig&#34; data-lang=&#34;zig&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// src/main.zig
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; std &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; @import(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;std&amp;#34;&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// standard library
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; processThreadsAPI &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; @cImport({
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    @cInclude(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;processthreadsapi.h&amp;#34;&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// import windows libraries
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; memoryAPI &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; @cImport({
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    @cInclude(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;memoryapi.h&amp;#34;&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// import windows libraries
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; win &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; @cImport({
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    @cInclude(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;windows.h&amp;#34;&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// import windows libraries
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; syncHAPI &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; @cImport({
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    @cInclude(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;synchapi.h&amp;#34;&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// import windows libraries
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;});
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; shellCode &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [_]&lt;span style=&#34;color:#66d9ef&#34;&gt;u8&lt;/span&gt;{ &lt;span style=&#34;color:#75715e&#34;&gt;// return 1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#ae81ff&#34;&gt;0xb8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x01&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;,  &lt;span style=&#34;color:#75715e&#34;&gt;// mov eax, 1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#ae81ff&#34;&gt;0xc3&lt;/span&gt;                            &lt;span style=&#34;color:#75715e&#34;&gt;// ret
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;pub&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; currentProcess &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; processThreadsAPI.&lt;span style=&#34;color:#a6e22e&#34;&gt;GetCurrentProcess&lt;/span&gt;(); &lt;span style=&#34;color:#75715e&#34;&gt;// grab the current process
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (currentProcess &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;.currentProcessFailed;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; addr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; memoryAPI.&lt;span style=&#34;color:#a6e22e&#34;&gt;VirtualAlloc&lt;/span&gt;( &lt;span style=&#34;color:#75715e&#34;&gt;// allocate virtual memory
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        shellCode.len, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        memoryAPI.MEM_COMMIT, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        memoryAPI.PAGE_EXECUTE_READWRITE
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    );
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (addr &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;.VirtualAllocFailed;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; bytesWritten&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; win.SIZE_T &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// set the bytes written to 0
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; result &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; memoryAPI.&lt;span style=&#34;color:#a6e22e&#34;&gt;WriteProcessMemory&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        currentProcess,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        addr,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;shellCode,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        shellCode.len,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;bytesWritten
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ); &lt;span style=&#34;color:#75715e&#34;&gt;// write the virtual memory
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (result &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        std.debug.&lt;span style=&#34;color:#a6e22e&#34;&gt;print&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;unable to write memory!&amp;#34;&lt;/span&gt;, .{});
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;.WriteFailed;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; threadHandle &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; processThreadsAPI.&lt;span style=&#34;color:#a6e22e&#34;&gt;CreateRemoteThread&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        currentProcess,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        @ptrCast(addr),
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ); &lt;span style=&#34;color:#75715e&#34;&gt;// grab and create a new thread handle
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (threadHandle &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;error&lt;/span&gt;.CreateRemoteThreadFailed;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; threadResult &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; syncHAPI.&lt;span style=&#34;color:#a6e22e&#34;&gt;WaitForSingleObject&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        threadHandle,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        win.INFINITE,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ); &lt;span style=&#34;color:#75715e&#34;&gt;// wait for the thread to finish
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    std.debug.&lt;span style=&#34;color:#a6e22e&#34;&gt;print&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;thread result: {}&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;, .{threadResult}); &lt;span style=&#34;color:#75715e&#34;&gt;// debugging
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; exitCode&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; win.DWORD &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    _ &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; win.&lt;span style=&#34;color:#a6e22e&#34;&gt;GetExitCodeThread&lt;/span&gt;(threadHandle, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;exitCode); &lt;span style=&#34;color:#75715e&#34;&gt;// get the exit code
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    std.debug.&lt;span style=&#34;color:#a6e22e&#34;&gt;print&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Thread code: {}!&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;, .{exitCode});  &lt;span style=&#34;color:#75715e&#34;&gt;// debugging
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;dll-injection&#34;&gt;DLL Injection&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&#34;//localhost:1313/malware101/dll_injection.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Common form of process injection by using libraries to inject code once it&amp;rsquo;s loaded&lt;/li&gt;
@@ -559,6 +636,13 @@
 &lt;/ul&gt;
 &lt;h3 id=&#34;inline-hooking&#34;&gt;Inline Hooking&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&#34;//localhost:1313/malware101/inline_hooking.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Injects code into a target process and modifies the function being hooked.&lt;/li&gt;
+&lt;li&gt;reinstalling the previous function is recommended to prevent tripping endpoint protection&lt;/li&gt;
+&lt;li&gt;Jumping back to the original function is called a &amp;ldquo;Trampoline&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;windows-rootkits&#34;&gt;Windows Rootkits&lt;/h2&gt;
 &lt;h1 id=&#34;terms-101&#34;&gt;Terms 101&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;
