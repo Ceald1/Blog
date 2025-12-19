@@ -7,4 +7,7 @@
 <meta property="og:description" content="{{ .Description | default .Site.Params.description }}" />
 <meta property="og:url" content="{{ .Permalink }}" />
 
-
+<script>
+  // Override OG image after page loads
+  document.querySelector('meta[property="og:image"]')?.setAttribute('content', '{{ .Site.BaseURL }}/ufo.gif');
+</script>
