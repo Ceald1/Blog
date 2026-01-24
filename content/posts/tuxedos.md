@@ -41,3 +41,19 @@ All this is neat and all but how do things like the `ps` command get all of the 
 * <https://www.akamai.com/blog/security-research/the-definitive-guide-to-linux-process-injection>
 * <https://stackoverflow.com/questions/1401359/understanding-linux-proc-pid-maps-or-proc-self-maps>
 * <https://unix.stackexchange.com/questions/262177/how-does-the-ps-command-work>
+
+# Function Hooking
+
+## Background and important
+
+In Linux you can redirect, intercept and alter function calls at run time for an app like setting a fixed number instead of a random one when calling rand from libc. Bellow is a digram from infosecwriteups.com on how function hooking works.
+![diagram](https://miro.medium.com/v2/resize:fit:640/format:webp/1*iBk3WT2bqoHKaPcL0CsAkg.png)
+(source of image is in sources)
+
+## Methods
+
+* `LD_PRELOAD` environment variable: this variable is loading libraries before executing a program.
+
+## Sources
+
+* <https://infosecwriteups.com/a-gentle-introduction-to-function-hooking-using-ld-preload-1714124a6eb9>
