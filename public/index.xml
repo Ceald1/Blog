@@ -5,9 +5,16 @@
     <link>//localhost:1313/</link>
     <description>Recent content on Ceald&#39;s blog</description>
     <generator>Hugo</generator>
-    <language>en</language>
-    <lastBuildDate>Fri, 14 Nov 2025 18:20:01 -0700</lastBuildDate>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 24 Jan 2026 00:08:40 -0700</lastBuildDate>
     <atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tuxedos</title>
+      <link>//localhost:1313/posts/tuxedos/</link>
+      <pubDate>Sat, 24 Jan 2026 00:08:40 -0700</pubDate>
+      <guid>//localhost:1313/posts/tuxedos/</guid>
+      <description>&lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;&#xA;&lt;p&gt;First windows now it&amp;rsquo;s time for the penguin! Unlike windows, Linux has a more direct approach for doing things like manipulating memory or linking libraries or you don&amp;rsquo;t need to call 3+ api functions to do something like process injection.&lt;/p&gt;&#xA;&lt;h1 id=&#34;process-injection&#34;&gt;Process Injection&lt;/h1&gt;&#xA;&lt;h2 id=&#34;background-and-important&#34;&gt;Background and important&lt;/h2&gt;&#xA;&lt;p&gt;In Linux there&amp;rsquo;s no possible way to allocate more memory to a process meaning if the original process isn&amp;rsquo;t restored it&amp;rsquo;ll crash.&lt;/p&gt;&#xA;&lt;h2 id=&#34;system-calls-and-methods&#34;&gt;System Calls and Methods&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;code&gt;ptrace&lt;/code&gt;: debugs a remote process meaning memory on that process can be changed and inspected.&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;procfs&lt;/code&gt;: a filesystem that shows the interfaces for running processes (literally in &lt;code&gt;/proc&lt;/code&gt; on Linux).&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Processes are typically directories represented by their PIDs.&lt;/li&gt;&#xA;&lt;li&gt;Inside of the PIDs is the mem file that shows the memory address and space for that process.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;process_vm_writev&lt;/code&gt;: allows for modifying data space of the remote process.&#xA;&lt;ul&gt;&#xA;&lt;li&gt;This syscall receives a pointer and copies it to the specified location in the remote process.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;the-elephant-in-the-room&#34;&gt;The Elephant In The Room&lt;/h3&gt;&#xA;&lt;p&gt;All this is neat and all but how do things like the &lt;code&gt;ps&lt;/code&gt; command get all of the processes and memory in Linux? Well it actually reads them from the &lt;code&gt;/proc&lt;/code&gt; directory on the Linux filesystem!&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Malware101</title>
       <link>//localhost:1313/posts/malware101/</link>
