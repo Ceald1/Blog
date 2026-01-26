@@ -269,7 +269,7 @@ pub fn main() !void { // main function
 4. Detach when done.
 5. Wait for `ptrace` to actually attach to the process.
 6. Get the memory registers with `ptrace` and `PTRACE_GETREGS`. This is needed for finding where to inject the shell code.
-7. copy them (probably don't need to but is good in case of wanting to revert them back).
+7. set the address with an offset of 2 to immediately execute the code.
 8. Now time to inject the shell code!
 9. Prepare the shell code for being sent into the target process and calculate the chunk size.
 10. Inject the shell code in 8 byte chunks.
