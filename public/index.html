@@ -185,6 +185,48 @@
     
       <article class="post on-list">
         <h2 class="post-title">
+          <a href="//localhost:1313/posts/bpfs/">Bpfs</a>
+        </h2>
+
+        <div class="post-meta"><time class="post-date">2026-02-02</time></div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="//localhost:1313/tags/malware/">malware</a>&nbsp;
+            
+            #<a href="//localhost:1313/tags/ebpf/">ebpf</a>&nbsp;
+            
+            #<a href="//localhost:1313/tags/c/">c</a>&nbsp;
+            
+          </span>
+        
+
+        
+  <img src="https://media1.tenor.com/m/wn22V4UMowYAAAAC/flying-bee.gif"
+    class="post-cover"
+    alt="Bpfs"
+    title="Cover Image" />
+
+
+        <div class="post-content">
+          
+            <h1 id="background">Background</h1>
+<p>While I was learning about making things like rootkits and linux kernel modules (post coming soon!) I stumbled upon BPFs or Berkeley Packet Filters and you can hook system calls with them and was presented as a &ldquo;safer/modern alternative&rdquo; to something like a linux kernel module for hooking system calls.</p>
+<h1 id="wtf-is-it">WTF is it?</h1>
+<p>It&rsquo;s a program that runs in a virtual machine alongside the kernel to filter things like network traffic or to secure a system, an example is Kube Armor! BPFs are also event based meaning they only trigger when certain events happen like dropping a network packet. The extended version of BPFs are eBPFs! The extended version allows for things like system calls and beyond simple packet capture and network based events, instead you can act on things like openat being called or linux security modules being called!</p>
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button inline" href="/posts/bpfs/">[Read more]</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h2 class="post-title">
           <a href="//localhost:1313/posts/tuxedos/">Tuxedos</a>
         </h2>
 
@@ -341,56 +383,6 @@
         
           <div>
             <a class="read-more button inline" href="/posts/winregistrysecrets/">[Read more]</a>
-          </div>
-        
-      </article>
-    
-      <article class="post on-list">
-        <h2 class="post-title">
-          <a href="//localhost:1313/posts/mothership_c2/">Mothership_c2</a>
-        </h2>
-
-        <div class="post-meta"><time class="post-date">2024-11-11</time></div>
-
-        
-          <span class="post-tags">
-            
-            #<a href="//localhost:1313/tags/new/">new</a>&nbsp;
-            
-            #<a href="//localhost:1313/tags/projects/">projects</a>&nbsp;
-            
-            #<a href="//localhost:1313/tags/cybersecurity/">cybersecurity</a>&nbsp;
-            
-            #<a href="//localhost:1313/tags/c2/">c2</a>&nbsp;
-            
-            #<a href="//localhost:1313/tags/python/">python</a>&nbsp;
-            
-            #<a href="//localhost:1313/tags/go/">go</a>&nbsp;
-            
-          </span>
-        
-
-        
-
-
-        <div class="post-content">
-          
-            <h2 id="description">Description:</h2>
-<p>Mothership C2 is my command and control server for managing and interacting with shell connections.</p>
-<h2 id="features">Features:</h2>
-<p>Some features of Mothership include</p>
-<ul>
-<li>Encryption for sending commands and their outputs</li>
-<li>Shells being managed and interacted with HTTP</li>
-</ul>
-<h2 id="what-is-a-c2">What is a C2?</h2>
-<p>A C2 server is a Command and Control server, it helps with controlling and commanding shell connections. C2 servers are used by APTs (advanced persistent threats) and by red teams</p>
-          
-        </div>
-
-        
-          <div>
-            <a class="read-more button inline" href="/posts/mothership_c2/">[Read more]</a>
           </div>
         
       </article>

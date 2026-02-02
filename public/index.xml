@@ -6,8 +6,15 @@
     <description>Recent content on Ceald&#39;s blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 24 Jan 2026 00:08:40 -0700</lastBuildDate>
+    <lastBuildDate>Mon, 02 Feb 2026 00:25:35 -0700</lastBuildDate>
     <atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bpfs</title>
+      <link>//localhost:1313/posts/bpfs/</link>
+      <pubDate>Mon, 02 Feb 2026 00:25:35 -0700</pubDate>
+      <guid>//localhost:1313/posts/bpfs/</guid>
+      <description>&lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;&#xA;&lt;p&gt;While I was learning about making things like rootkits and linux kernel modules (post coming soon!) I stumbled upon BPFs or Berkeley Packet Filters and you can hook system calls with them and was presented as a &amp;ldquo;safer/modern alternative&amp;rdquo; to something like a linux kernel module for hooking system calls.&lt;/p&gt;&#xA;&lt;h1 id=&#34;wtf-is-it&#34;&gt;WTF is it?&lt;/h1&gt;&#xA;&lt;p&gt;It&amp;rsquo;s a program that runs in a virtual machine alongside the kernel to filter things like network traffic or to secure a system, an example is Kube Armor! BPFs are also event based meaning they only trigger when certain events happen like dropping a network packet. The extended version of BPFs are eBPFs! The extended version allows for things like system calls and beyond simple packet capture and network based events, instead you can act on things like openat being called or linux security modules being called!&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Tuxedos</title>
       <link>//localhost:1313/posts/tuxedos/</link>
