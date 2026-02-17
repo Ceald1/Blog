@@ -6,8 +6,15 @@
     <description>Recent content on Ceald&#39;s blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 02 Feb 2026 00:25:35 -0700</lastBuildDate>
+    <lastBuildDate>Tue, 17 Feb 2026 00:05:22 -0700</lastBuildDate>
     <atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kernel_hacking</title>
+      <link>//localhost:1313/posts/kernel_hacking/</link>
+      <pubDate>Tue, 17 Feb 2026 00:05:22 -0700</pubDate>
+      <guid>//localhost:1313/posts/kernel_hacking/</guid>
+      <description>&lt;h1 id=&#34;generic-title&#34;&gt;Generic Title&lt;/h1&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s skip introductions, everyone knows what Linux is and that it&amp;rsquo;s a kernel and not an OS. Most people tend to overlook how the kernel actually works not just how to install or compile packages. This article will go over how the kernel actually functions and not a &amp;ldquo;zero to hero&amp;rdquo; post.&lt;/p&gt;&#xA;&lt;h1 id=&#34;building-wootkits&#34;&gt;Building Wootkits&lt;/h1&gt;&#xA;&lt;p&gt;It&amp;rsquo;s the big 26 as of writing this and writing a hooked library seems a bit outdated and generic so why not live a bit on the edge and do something directly at the kernel level?&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Bpfs</title>
       <link>//localhost:1313/posts/bpfs/</link>
