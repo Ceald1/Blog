@@ -1,3 +1,6 @@
 [submodule "themes/hugo-theme-nightfall"]
 	path = themes/hugo-theme-nightfall
 	url = https://github.com/LordMathis/hugo-theme-nightfall.git
+[submodule "themes/moonlit"]
+	path = themes/moonlit
+	url = https://github.com/Ceald1/moonlit.git
