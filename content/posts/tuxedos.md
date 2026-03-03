@@ -11,6 +11,7 @@ description = "A dive into the linux kernel on system calls and malware developm
 showFullContent = false
 readingTime = true
 hideComments = false
+toc = true
 +++
 
 # Background

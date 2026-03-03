@@ -10,6 +10,7 @@ description = ""
 showFullContent = false
 readingTime = false
 hideComments = false
+toc = true
 +++
 ## Intro
 The windows registry is a system database that contains keys and values. Some things in the registry include; Windows credentials, cached passwords, usernames, and other credentials. In windows a group of keys is called a "hive" the hives that are the cool ones are; SAM, System, and Security.

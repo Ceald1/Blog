@@ -11,6 +11,7 @@ description = ""
 showFullContent = false
 readingTime = false
 hideComments = false
+toc = true
 +++
 
 # Background

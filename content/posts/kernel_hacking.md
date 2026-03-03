@@ -11,6 +11,7 @@ description = "A dive into linux kernel hacking"
 showFullContent = false
 readingTime = true
 hideComments = false
+toc = true
 +++
 
 

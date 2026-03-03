@@ -46,3 +46,8 @@ email = ''
 
 #twitter = ''
 hackthebox = 'https://app.hackthebox.com/profile/440221'
+
+[markup.tableOfContents]
+  startLevel = 2    # Start from h2 (skip h1)
+  endLevel = 4      # Include up to h4
+  ordered = false   # Use <ul> instead of <ol>
