@@ -1,82 +1,103 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ceald&#39;s blog</title>
-    <link>//localhost:1313/</link>
-    <description>Recent content on Ceald&#39;s blog</description>
+    <title>Home on Ceald&#39;s Blog</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content in Home on Ceald&#39;s Blog</description>
     <generator>Hugo</generator>
-    <language>en-us</language>
+    <language>en-US</language>
     <lastBuildDate>Tue, 17 Feb 2026 00:05:22 -0700</lastBuildDate>
-    <atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kernel_hacking</title>
-      <link>//localhost:1313/posts/kernel_hacking/</link>
+      <link>http://localhost:1313/posts/kernel_hacking/</link>
       <pubDate>Tue, 17 Feb 2026 00:05:22 -0700</pubDate>
-      <guid>//localhost:1313/posts/kernel_hacking/</guid>
+      <guid>http://localhost:1313/posts/kernel_hacking/</guid>
       <description>&lt;h1 id=&#34;generic-title&#34;&gt;Generic Title&lt;/h1&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s skip introductions, everyone knows what Linux is and that it&amp;rsquo;s a kernel and not an OS. Most people tend to overlook how the kernel actually works not just how to install or compile packages. This article will go over how the kernel actually functions and not a &amp;ldquo;zero to hero&amp;rdquo; post.&lt;/p&gt;&#xA;&lt;h1 id=&#34;building-wootkits&#34;&gt;Building Wootkits&lt;/h1&gt;&#xA;&lt;p&gt;It&amp;rsquo;s the big 26 as of writing this and writing a hooked library seems a bit outdated and generic so why not live a bit on the edge and do something directly at the kernel level?&lt;/p&gt;</description>
     </item>
     <item>
       <title>Bpfs</title>
-      <link>//localhost:1313/posts/bpfs/</link>
+      <link>http://localhost:1313/posts/bpfs/</link>
       <pubDate>Mon, 02 Feb 2026 00:25:35 -0700</pubDate>
-      <guid>//localhost:1313/posts/bpfs/</guid>
+      <guid>http://localhost:1313/posts/bpfs/</guid>
       <description>&lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;&#xA;&lt;p&gt;While I was learning about making things like rootkits and linux kernel modules (post coming soon!) I stumbled upon BPFs or Berkeley Packet Filters and you can hook system calls with them and was presented as a &amp;ldquo;safer/modern alternative&amp;rdquo; to something like a linux kernel module for hooking system calls.&lt;/p&gt;&#xA;&lt;h1 id=&#34;wtf-is-it&#34;&gt;WTF is it?&lt;/h1&gt;&#xA;&lt;p&gt;It&amp;rsquo;s a program that runs in a virtual machine alongside the kernel to filter things like network traffic or to secure a system, an example is Kube Armor! BPFs are also event based meaning they only trigger when certain events happen like dropping a network packet. The extended version of BPFs are eBPFs! The extended version allows for things like system calls and beyond simple packet capture and network based events, instead you can act on things like openat being called or linux security modules being called!&lt;/p&gt;</description>
     </item>
     <item>
       <title>Tuxedos</title>
-      <link>//localhost:1313/posts/tuxedos/</link>
+      <link>http://localhost:1313/posts/tuxedos/</link>
       <pubDate>Sat, 24 Jan 2026 00:08:40 -0700</pubDate>
-      <guid>//localhost:1313/posts/tuxedos/</guid>
+      <guid>http://localhost:1313/posts/tuxedos/</guid>
       <description>&lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;&#xA;&lt;p&gt;First windows now it&amp;rsquo;s time for the penguin! Unlike windows, Linux has a more direct approach for doing things like manipulating memory or linking libraries or you don&amp;rsquo;t need to call 3+ API functions to do something like process injection.&lt;/p&gt;&#xA;&lt;h1 id=&#34;fundamentals&#34;&gt;Fundamentals&lt;/h1&gt;&#xA;&lt;h2 id=&#34;memory&#34;&gt;Memory&lt;/h2&gt;&#xA;&lt;p&gt;Everyone knows things like RAM but what about the other memory in the system?&lt;/p&gt;&#xA;&lt;h3 id=&#34;primary&#34;&gt;Primary&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Your RAM and ROM (read only memory)&lt;/li&gt;&#xA;&lt;li&gt;Disposable/wiped after a reboot.&lt;/li&gt;&#xA;&lt;li&gt;Fast readily available for programs&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h4 id=&#34;rom&#34;&gt;ROM&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Read only.&lt;/li&gt;&#xA;&lt;li&gt;BIOS level.&lt;/li&gt;&#xA;&lt;li&gt;Smaller chip.&lt;/li&gt;&#xA;&lt;li&gt;Provides all boot instructions and firmware.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h4 id=&#34;register-memory&#34;&gt;Register memory&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;storage locations on the CPU that store temporary data.&lt;/li&gt;&#xA;&lt;li&gt;Faster than RAM.&lt;/li&gt;&#xA;&lt;li&gt;Important instructions&lt;/li&gt;&#xA;&lt;li&gt;each register typically holds between 32 and 64 bits of data.&lt;/li&gt;&#xA;&lt;li&gt;THIS IS NOT CACHE MEMORY!!&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h5 id=&#34;data-register&#34;&gt;Data Register&lt;/h5&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;16 bit register that holds variables.&lt;/li&gt;&#xA;&lt;li&gt;Temporary holding place for data.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h5 id=&#34;program-counter-register-pc-register&#34;&gt;Program Counter Register (PC Register)&lt;/h5&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Memory address for next set of instructions in the program.&lt;/li&gt;&#xA;&lt;li&gt;Keeps proper sequence in the program.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h5 id=&#34;instruction-register&#34;&gt;Instruction Register&lt;/h5&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;16 bit register that contains the current instruction code from the main memory (RAM).&lt;/li&gt;&#xA;&lt;li&gt;This is what the CPU actually executes.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h5 id=&#34;address-register&#34;&gt;Address Register&lt;/h5&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;12 bit register for address location.&lt;/li&gt;&#xA;&lt;li&gt;CPU fetches and handles instructions from this.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h5 id=&#34;io-address-register&#34;&gt;I/O Address Register&lt;/h5&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;unique address with an input or output device like a keyboard or audio.&lt;/li&gt;&#xA;&lt;li&gt;CPU uses this to interact with other devices.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h5 id=&#34;io-buffer-register&#34;&gt;I/O Buffer Register&lt;/h5&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;temporary buffer for the I/O Address Register to exchange and hold data.&lt;/li&gt;&#xA;&lt;li&gt;Deals with before and after processing.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h4 id=&#34;cache-memory&#34;&gt;Cache Memory&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Fast but small.&lt;/li&gt;&#xA;&lt;li&gt;Typically old memory.&lt;/li&gt;&#xA;&lt;li&gt;CPU checks the cache first (a cache hit) before reading the RAM (a cache miss if not in cache).&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h5 id=&#34;l1-level-1-cache&#34;&gt;L1 (Level 1 Cache)&lt;/h5&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;First level in the CPU.&lt;/li&gt;&#xA;&lt;li&gt;Ranges from 2KB to 64KB in size.&lt;/li&gt;&#xA;&lt;li&gt;Every core has this.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h5 id=&#34;l2-level-2-cache&#34;&gt;L2 (Level 2 Cache)&lt;/h5&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Might not be present in the CPU.&lt;/li&gt;&#xA;&lt;li&gt;2 cores may share it.&lt;/li&gt;&#xA;&lt;li&gt;256KB to 512KB in size.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h5 id=&#34;l3-level-3-cache&#34;&gt;L3 (Level 3 Cache)&lt;/h5&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Shared by all cores and present outside of the CPU.&lt;/li&gt;&#xA;&lt;li&gt;Ranges from 1MB to 8MB in size.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h3 id=&#34;secondary&#34;&gt;Secondary&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Optical Disks&lt;/li&gt;&#xA;&lt;li&gt;Flash memory&lt;/li&gt;&#xA;&lt;li&gt;Slower than primary&lt;/li&gt;&#xA;&lt;li&gt;Persistent&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;sources&#34;&gt;Sources&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.geeksforgeeks.org/computer-organization-architecture/introduction-to-memory-and-memory-units/&#34;&gt;https://www.geeksforgeeks.org/computer-organization-architecture/introduction-to-memory-and-memory-units/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.geeksforgeeks.org/computer-organization-architecture/memory-hierarchy-design-and-its-characteristics/&#34;&gt;https://www.geeksforgeeks.org/computer-organization-architecture/memory-hierarchy-design-and-its-characteristics/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.geeksforgeeks.org/computer-science-fundamentals/cache-memory/&#34;&gt;https://www.geeksforgeeks.org/computer-science-fundamentals/cache-memory/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;assembly&#34;&gt;Assembly&lt;/h2&gt;&#xA;&lt;p&gt;Just kidding lol, I won&amp;rsquo;t have notes on assembly, resources bellow already did it.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Malware101</title>
-      <link>//localhost:1313/posts/malware101/</link>
+      <link>http://localhost:1313/posts/malware101/</link>
       <pubDate>Fri, 14 Nov 2025 18:20:01 -0700</pubDate>
-      <guid>//localhost:1313/posts/malware101/</guid>
+      <guid>http://localhost:1313/posts/malware101/</guid>
       <description>malware notes</description>
     </item>
     <item>
       <title>Windows-Tokens</title>
-      <link>//localhost:1313/posts/windowstokens/</link>
+      <link>http://localhost:1313/posts/windowstokens/</link>
       <pubDate>Thu, 20 Mar 2025 14:17:56 -0700</pubDate>
-      <guid>//localhost:1313/posts/windowstokens/</guid>
+      <guid>http://localhost:1313/posts/windowstokens/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;In windows things like access permissions are handled with tokens. Think of them as API tokens, they have certain permissions that you can do like impersonate other users or enable debugging on windows. The things that will be looked at in this post is how you can use windows tokens to get lower permissions than the Administrator user.&lt;/p&gt;&#xA;&lt;h2 id=&#34;stealing-tokens-via-windows-processes&#34;&gt;Stealing Tokens Via Windows Processes&lt;/h2&gt;&#xA;&lt;p&gt;Getting right to the point. In windows processes also have access tokens and certain processes like winlogon you can duplicate the token and use it to run commands as another user. This is done by first opening the process to get the token like so:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Win-Registry-Secrets</title>
-      <link>//localhost:1313/posts/winregistrysecrets/</link>
+      <link>http://localhost:1313/posts/winregistrysecrets/</link>
       <pubDate>Thu, 20 Mar 2025 13:50:08 -0700</pubDate>
-      <guid>//localhost:1313/posts/winregistrysecrets/</guid>
+      <guid>http://localhost:1313/posts/winregistrysecrets/</guid>
       <description>&lt;h2 id=&#34;intro&#34;&gt;Intro&lt;/h2&gt;&#xA;&lt;p&gt;The windows registry is a system database that contains keys and values. Some things in the registry include; Windows credentials, cached passwords, usernames, and other credentials. In windows a group of keys is called a &amp;ldquo;hive&amp;rdquo; the hives that are the cool ones are; SAM, System, and Security.&lt;/p&gt;&#xA;&lt;h2 id=&#34;system-hive&#34;&gt;SYSTEM Hive&lt;/h2&gt;&#xA;&lt;p&gt;The most important registry hive is the &amp;ldquo;System&amp;rdquo; hive, in the key: &lt;code&gt;CurrentControlSet\Control\Lsa&lt;/code&gt; there are the necessary components to craft the boot key which will be used to decrypt the rest of the registry database to get things like hashes for users. Here&amp;rsquo;s some example code from &amp;ldquo;Go-Go-Gadget-Katz&amp;rdquo; for getting the boot key:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Mothership_c2</title>
-      <link>//localhost:1313/posts/mothership_c2/</link>
+      <link>http://localhost:1313/posts/mothership_c2/</link>
       <pubDate>Mon, 11 Nov 2024 17:31:31 -0700</pubDate>
-      <guid>//localhost:1313/posts/mothership_c2/</guid>
+      <guid>http://localhost:1313/posts/mothership_c2/</guid>
       <description>&lt;h2 id=&#34;description&#34;&gt;Description:&lt;/h2&gt;&#xA;&lt;p&gt;Mothership C2 is my command and control server for managing and interacting with shell connections.&lt;/p&gt;&#xA;&lt;h2 id=&#34;features&#34;&gt;Features:&lt;/h2&gt;&#xA;&lt;p&gt;Some features of Mothership include&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Encryption for sending commands and their outputs&lt;/li&gt;&#xA;&lt;li&gt;Shells being managed and interacted with HTTP&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;what-is-a-c2&#34;&gt;What is a C2?&lt;/h2&gt;&#xA;&lt;p&gt;A C2 server is a Command and Control server, it helps with controlling and commanding shell connections. C2 servers are used by APTs (advanced persistent threats) and by red teams&lt;/p&gt;</description>
     </item>
     <item>
       <title>Delta2</title>
-      <link>//localhost:1313/posts/delta2/</link>
+      <link>http://localhost:1313/posts/delta2/</link>
       <pubDate>Sun, 10 Nov 2024 16:56:20 -0700</pubDate>
-      <guid>//localhost:1313/posts/delta2/</guid>
+      <guid>http://localhost:1313/posts/delta2/</guid>
       <description>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;&#xA;&lt;p&gt;Delta2 is an API that is a Swiss army knife for active directory. I wrote this project because I was sick of having to set up java and remembering how to use bloodhound python for doing active directory boxes on HackTheBox, so I wrote my own. Delta2&amp;rsquo;s primary use is automation like automate kerberoasting after mapping the domain or getting shortest paths to admin users and exploiting the necessary users to get to admin users.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Hello</title>
-      <link>//localhost:1313/posts/hello/</link>
+      <link>http://localhost:1313/posts/hello/</link>
       <pubDate>Fri, 08 Nov 2024 23:55:59 -0700</pubDate>
-      <guid>//localhost:1313/posts/hello/</guid>
+      <guid>http://localhost:1313/posts/hello/</guid>
       <description>&lt;h2 id=&#34;hello-world&#34;&gt;Hello World!!&lt;/h2&gt;</description>
     </item>
     <item>
+      <title>Post 3</title>
+      <link>http://localhost:1313/posts/post-3/</link>
+      <pubDate>Wed, 15 Mar 2023 11:00:00 -0700</pubDate>
+      <guid>http://localhost:1313/posts/post-3/</guid>
+      <description>&lt;p&gt;Occaecat aliqua consequat laborum ut ex aute aliqua culpa quis irure esse magna dolore quis. Proident fugiat labore eu laboris officia Lorem enim. Ipsum occaecat cillum ut tempor id sint aliqua incididunt nisi incididunt reprehenderit. Voluptate ad minim sint est aute aliquip esse occaecat tempor officia qui sunt. Aute ex ipsum id ut in est velit est laborum incididunt. Aliqua qui id do esse sunt eiusmod id deserunt eu nostrud aute sit ipsum. Deserunt esse cillum Lorem non magna adipisicing mollit amet consequat.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Post 2</title>
+      <link>http://localhost:1313/posts/post-2/</link>
+      <pubDate>Wed, 15 Feb 2023 10:00:00 -0700</pubDate>
+      <guid>http://localhost:1313/posts/post-2/</guid>
+      <description>&lt;p&gt;Anim eiusmod irure incididunt sint cupidatat. Incididunt irure irure irure nisi ipsum do ut quis fugiat consectetur proident cupidatat incididunt cillum. Dolore voluptate occaecat qui mollit laborum ullamco et. Ipsum laboris officia anim laboris culpa eiusmod ex magna ex cupidatat anim ipsum aute. Mollit aliquip occaecat qui sunt velit ut cupidatat reprehenderit enim sunt laborum. Velit veniam in officia nulla adipisicing ut duis officia.&lt;/p&gt;&#xA;&lt;p&gt;Exercitation voluptate irure in irure tempor mollit Lorem nostrud ad officia. Velit id fugiat occaecat do tempor. Sit officia Lorem aliquip eu deserunt consectetur. Aute proident deserunt in nulla aliquip dolore ipsum Lorem ut cupidatat consectetur sit sint laborum. Esse cupidatat sit sint sunt tempor exercitation deserunt. Labore dolor duis laborum est do nisi ut veniam dolor et nostrud nostrud.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Post 1</title>
+      <link>http://localhost:1313/posts/post-1/</link>
+      <pubDate>Sun, 15 Jan 2023 09:00:00 -0700</pubDate>
+      <guid>http://localhost:1313/posts/post-1/</guid>
+      <description>&lt;p&gt;Tempor proident minim aliquip reprehenderit dolor et ad anim Lorem duis sint eiusmod. Labore ut ea duis dolor. Incididunt consectetur proident qui occaecat incididunt do nisi Lorem. Tempor do laborum elit laboris excepteur eiusmod do. Eiusmod nisi excepteur ut amet pariatur adipisicing Lorem.&lt;/p&gt;&#xA;&lt;p&gt;Occaecat nulla excepteur dolore excepteur duis eiusmod ullamco officia anim in voluptate ea occaecat officia. Cillum sint esse velit ea officia minim fugiat. Elit ea esse id aliquip pariatur cupidatat id duis minim incididunt ea ea. Anim ut duis sunt nisi. Culpa cillum sit voluptate voluptate eiusmod dolor. Enim nisi Lorem ipsum irure est excepteur voluptate eu in enim nisi. Nostrud ipsum Lorem anim sint labore consequat do.&lt;/p&gt;</description>
+    </item>
+    <item>
       <title></title>
-      <link>//localhost:1313/about/</link>
+      <link>http://localhost:1313/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>//localhost:1313/about/</guid>
-      <description>&lt;h1 id=&#34;about-me&#34;&gt;About Me&lt;/h1&gt;&#xA;&lt;p&gt;&lt;img src=&#34;//localhost:1313/avatar.png&#34; alt=&#34;&#34;&gt;&#xA;Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools/projects sometimes. I know python and a bit of Golang&lt;/p&gt;</description>
+      <guid>http://localhost:1313/about/</guid>
+      <description>&lt;h1 id=&#34;about-me&#34;&gt;About Me&lt;/h1&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/avatar.png&#34; alt=&#34;&#34;&gt;&#xA;Hello World! I am Ceald, a cybersecurity student, I like heavy music and build cool tools/projects sometimes. I know python and a bit of Golang&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

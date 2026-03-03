@@ -1,3 +1,7 @@
+github.com/Ceald1/moonlit v0.0.0-20260303104214-93ec59711846 h1:MDIn32TqVNkeHkIsSeR8o1hvc5oq3V5GKMGcthbgfzY=
+github.com/Ceald1/moonlit v0.0.0-20260303104214-93ec59711846/go.mod h1:DKGKMueRI73d/lotZLviyrX1psnPMToPXnWxA8KBc5A=
+github.com/Ceald1/moonlit v0.0.0-20260303104757-13c973f04c2c h1:ERqqL3ulQ/bEBlHUmyAMuhdpAmgeb99WbPPDHoJvpqE=
+github.com/Ceald1/moonlit v0.0.0-20260303104757-13c973f04c2c/go.mod h1:DKGKMueRI73d/lotZLviyrX1psnPMToPXnWxA8KBc5A=
 github.com/panr/hugo-theme-terminal/v4 v4.0.9 h1:oncGzc0H8LYik+cNrM3TypkFRQHkrIExkEalhwIzlgg=
 github.com/panr/hugo-theme-terminal/v4 v4.0.9/go.mod h1:W0sFodm5ipL5gjRqOFjg4zD+euoQ8hCtyDDtqSpihxM=
 github.com/panr/hugo-theme-terminal/v4 v4.2.3 h1:BU4x0qPDTZao6kzT4hWrOwGVaYgo5GesQZr+ATMsQoM=
