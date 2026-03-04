@@ -54,10 +54,10 @@
 
 
 
-  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Ceald&#39;s Blog" />
 
 
 
+  <link href="/index.json" rel="alternate" type="application/json" title="Ceald&#39;s Blog" />
 
 
 
@@ -66,6 +66,8 @@
 <link rel="stylesheet" href="http://localhost:1313/css/colors.css">
 <link rel="stylesheet" href="http://localhost:1313/css/style.css">
 <link rel="stylesheet" href="http://localhost:1313/css/mobile.css">
+
+<link rel="stylesheet" href="http://localhost:1313/css/search.css">
 </head>
 <body>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -106,6 +108,29 @@
         <i data-lucide="box"></i>
       </a>
     </button>
+
+<div class="search-container">
+  <label for="search-input" class="search-label">SEARCH</label>
+  <div class="search-input-wrapper">
+    <span class="corner corner-tl"></span>
+    <span class="corner corner-tr"></span>
+    <span class="corner corner-bl"></span>
+    <span class="corner corner-br"></span>
+    
+    <input
+      id="search-input"
+      type="text"
+      class="search-input"
+      placeholder="> search posts..."
+      autocomplete="off"
+    />
+  </div>
+  <div id="search-results" class="search-results"></div>
+</div>
+
+<script src="/js/main.js"></script>
+
+
   </div>
     </ul>
   </nav>
