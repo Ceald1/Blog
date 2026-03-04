@@ -245,7 +245,7 @@ pub fn main() !void { // main function
 
 ### header file
 
-```h
+```c
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
