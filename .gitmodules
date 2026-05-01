@@ -4,3 +4,4 @@
 [submodule "themes/moonlit"]
 	path = themes/moonlit
 	url = https://github.com/Ceald1/moonlit.git
+	branch = main
