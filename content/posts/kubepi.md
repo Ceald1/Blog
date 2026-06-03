@@ -1,7 +1,8 @@
 +++
 title = 'Kube PI4'
-date = 2026-06-03T00:06:08-07:00
+date = "2026-06-03T00:06:08-07:00"
 draft = false
+coverOnly = true
 cover = "https://media1.tenor.com/m/80qlzG0ufboAAAAd/kubernetes.gif"
 tags = ["ebpf", "k8s", "raspberrypi", "pi", "k3s", "kubernetes"]
 keywords = ["bpf", "k8s", "raspberrypi", "k3s", "kubernetes"]
