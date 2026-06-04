@@ -39,7 +39,7 @@ Now that you installed the essentials, you’re going to install headlamp and ad
 
 1. Follow the in-cluster installation for headlamp: https://headlamp.dev/#download-platforms
 
-2. Add an ingress and middleware:
+2. Add an ingress, middleware, and service account:
 
    ```yaml
    
