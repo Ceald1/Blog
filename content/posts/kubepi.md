@@ -619,295 +619,316 @@ If you really wanna make it super l33t 1337 add alerting to discord!
      namespace: kubescape
    data:
      scan-and-send.js: |
-       const { execSync } = require('child_process');
-       const http = require('http');
-       const fs = require('fs');
-       const zlib = require('node:zlib');
-       const { promisify } = require('node:util');
-       
-       const brotliCompress = promisify(zlib.brotliCompress);
-       
-       async function shrinkString(hugeString) {
-         const inputBuffer = Buffer.from(hugeString, 'utf8');
-       
-         const compressedBuffer = await brotliCompress(inputBuffer, {
-           params: {
-             [zlib.constants.BROTLI_PARAM_MODE]:
-               zlib.constants.BROTLI_MODE_TEXT,
-             [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
-             [zlib.constants.BROTLI_PARAM_LGWIN]: 24
-           }
-         });
-       
-         return compressedBuffer.toString('base64url');
-       }
-       
-       function sendToProxy(username, content) {
-         return new Promise((resolve, reject) => {
-           const payload = JSON.stringify({
-             username,
-             content
-           });
-       
-           const req = http.request(
-             {
-               hostname: 'discord-proxy.logging.svc.cluster.local',
-               port: 8080,
-               path: '/',
-               method: 'POST',
-               headers: {
-                 'Content-Type': 'application/json',
-                 'Content-Length': Buffer.byteLength(payload)
-               }
-             },
-             res => {
-               res.resume();
-               resolve();
-             }
-           );
-       
-           req.on('error', reject);
-           req.write(payload);
-           req.end();
-         });
-       }
-       
-       async function main() {
-         try {
-           console.log('📥 Installing Kubescape...');
-       
-           execSync(
-             'curl -s https://raw.githubusercontent.com/kubescape/kubescape/master/install.sh | /bin/bash',
-             { stdio: 'inherit' }
-           );
-       
-           const kubescapePath = '/usr/local/bin/kubescape';
-       
-           if (!fs.existsSync(kubescapePath)) {
-             throw new Error(
-               'Kubescape binary not found after install.'
-             );
-           }
-       
-           console.log('🔄 Running Kubescape scan...');
-       
-           try {
-             execSync(
-               `${kubescapePath} scan --format json --output /tmp/results.json`,
-               {
-                 stdio: 'inherit',
-                 timeout: 300_000
-               }
-             );
-           } catch (err) {
-             console.warn(
-               '⚠️ Full scan failed, retrying with --include-namespaces all...'
-             );
-       
-             execSync(
-               `${kubescapePath} scan --include-namespaces all --format json --output /tmp/results.json`,
-               {
-                 stdio: 'inherit',
-                 timeout: 300_000
-               }
-             );
-           }
-       
-           if (!fs.existsSync('/tmp/results.json')) {
-             throw new Error('Scan output file not found.');
-           }
-       
-           const rawData = fs.readFileSync(
-             '/tmp/results.json',
-             'utf8'
-           );
-       
-           const report = JSON.parse(rawData);
-       
-           const vulnerabilities = report.summaryDetails?.vulnerabilities || {};
-   
-           const cves = vulnerabilities.CVEs || [];
-   
-           const cveSeveritySummary = vulnerabilities.mapsSeverityToSummary || {};
-           const criticalCVEs = cveSeveritySummary.Critical || 0;
-   
-           const highCVEs = cveSeveritySummary.High || 0;
-   
-           const mediumCVEs = cveSeveritySummary.Medium || 0;
-   
-           const lowCVEs = cveSeveritySummary.Low || 0;
-           const topCVEs = cves.sort((a, b) => {
-             const sev = {
-               Critical: 4,
-               High: 3,
-               Medium: 2,
-               Low: 1
-               };
-             return (
-             (sev[b.severity] || 0) -
-             (sev[a.severity] || 0)
-             );
-           }).slice(0, 10);
-   
-           const summary =
-             report.summaryDetails || {};
-       
-           const controls =
-             summary.controls || {};
-       
-           const frameworks =
-             summary.frameworks || [];
-       
-           const severityCounters =
-             summary.controlsSeverityCounters || {};
-       
-           const critical =
-             severityCounters.criticalSeverity || 0;
-       
-           const high =
-             severityCounters.highSeverity || 0;
-       
-           const medium =
-             severityCounters.mediumSeverity || 0;
-       
-           const low =
-             severityCounters.lowSeverity || 0;
-       
-           const failedFrameworks = frameworks
-             .filter(f => f.status === 'failed')
-             .map(f => ({
-               name: f.name,
-               score: f.complianceScore,
-               failed:
-                 f.ResourceCounters?.failedResources || 0
-             }));
-       
-           const failedControls = Object.values(
-             controls
-           )
-             .filter(c => c.status === 'failed')
-             .map(c => ({
-               id: c.controlID,
-               name: c.name,
-               severity: c.severity,
-               failedResources:
-                 c.ResourceCounters?.failedResources || 0,
-               complianceScore: c.complianceScore
-             }));
-       
-           const severityBreakdown = {
-             Critical: 0,
-             High: 0,
-             Medium: 0,
-             Low: 0
-           };
-       
-           for (const control of failedControls) {
-             if (
-               Object.prototype.hasOwnProperty.call(
-                 severityBreakdown,
-                 control.severity
-               )
-             ) {
-               severityBreakdown[control.severity]++;
-             }
-           }
-       
-           const topControls = [...failedControls]
-             .sort(
-               (a, b) =>
-                 b.failedResources - a.failedResources
-             )
-             .slice(0, 10);
-       
-           const compressedReport =
-             await shrinkString(rawData);
-       
-           let emoji = '🟢';
-       
-           if (critical > 0) {
-             emoji = '🔴';
-           } else if (high > 0) {
-             emoji = '🟠';
-           } else if (medium > 0) {
-             emoji = '🟡';
-           }
-       
-           const frameworkSummary =
-             failedFrameworks.length > 0
-               ? failedFrameworks
-                   .map(
-                     f =>
-                       `• ${f.name}: ${f.failed} failed resources (${f.score.toFixed(
-                         1
-                       )}% compliant)`
-                   )
-                   .join('\n')
-               : 'None';
-       
-           const findingsSummary =
-             topControls.length > 0
-               ? topControls
-                   .map(
-                     c =>
-                       `• [${c.severity}] ${c.name} (${c.failedResources} resources)`
-                   )
-                   .join('\n')
-               : 'None';
-       
-           const message = [
-             `${emoji} **Kubescape Security Report**`,
-             `Scan Date: ${new Date().toISOString()}`,
-             '',
-             '**Framework Failures**',
-             frameworkSummary,
-             '',
-             '**Control Findings**',
-             `• Critical: ${severityBreakdown.Critical}`,
-             `• High: ${severityBreakdown.High}`,
-             `• Medium: ${severityBreakdown.Medium}`,
-             `• Low: ${severityBreakdown.Low}`,
-             '',
-             '**Top Failed Controls**',
-             findingsSummary,
-             '',
-             '**CVE Findings**',
-             `• Critical: ${criticalCVEs}`,
-             `• High: ${highCVEs}`,
-             `• Medium: ${mediumCVEs}`,
-             `• Low: ${lowCVEs}`,
-           ].join('\n');
-           if (topCVEs.length > 0) {
-               messageParts.push(
-                 '',
-                 '**Top CVEs**',
-                 ...topCVEs.map(
-                   cve =>
-                     `• ${cve.name || cve.cveID || cve.id} [${cve.severity}]`
-                 )
-               );
-           }
-       
-           console.log(message);
-       
-           console.log(
-             '📤 Sending summary to Discord proxy...'
-           );
-       
-           await sendToProxy(
-             'Kubescape Scanner',
-             message
-           );
-       
-      
-           console.log('✅ Done.');
-         } catch (err) {
-           console.error('❌ Fatal error:', err);
-           process.exit(1);
-         }
-       }
-       
-       main();
+    const { execSync } = require('child_process');
+    const http = require('http');
+    const fs = require('fs');
+    const zlib = require('node:zlib');
+    const { promisify } = require('node:util');
+
+    const EXCLUDED_NAMESPACES = ['kubescape', 'logging', 'kube-system', 'kubearmor'];
+
+    const brotliCompress = promisify(zlib.brotliCompress);
+
+    async function shrinkString(hugeString) {
+      const inputBuffer = Buffer.from(hugeString, 'utf8');
+      const compressedBuffer = await brotliCompress(inputBuffer, {
+        params: {
+          [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
+          [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+          [zlib.constants.BROTLI_PARAM_LGWIN]: 24
+        }
+      });
+      return compressedBuffer.toString('base64url');
+    }
+
+    function sendToProxy(username, content) {
+      return new Promise((resolve, reject) => {
+        const payload = JSON.stringify({ username, content });
+        const req = http.request(
+          {
+            hostname: 'discord-proxy.logging.svc.cluster.local',
+            port: 8080,
+            path: '/',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Content-Length': Buffer.byteLength(payload)
+            }
+          },
+          res => { res.resume(); resolve(); }
+        );
+        req.on('error', reject);
+        req.write(payload);
+        req.end();
+      });
+    }
+
+    function getClusterImages() {
+      try {
+        const tmplFile = '/tmp/kubectl-tmpl.txt';
+        fs.writeFileSync(tmplFile,
+          '{{range .items}}' +
+          '{{$ns := .metadata.namespace}}' +
+          '{{range .spec.containers}}{{$ns}}\t{{.image}}\n{{end}}' +
+          '{{range .spec.initContainers}}{{$ns}}\t{{.image}}\n{{end}}' +
+          '{{end}}'
+        );
+
+        const out = execSync(
+          `kubectl get pods --all-namespaces -o go-template-file=${tmplFile}`,
+          { encoding: 'utf8', timeout: 30_000 }
+        );
+
+        const excluded = new Set(EXCLUDED_NAMESPACES);
+        const images = new Set();
+
+        for (const line of out.split('\n')) {
+          const tab = line.indexOf('\t');
+          if (tab === -1) continue;
+          const namespace = line.slice(0, tab).trim();
+          const image     = line.slice(tab + 1).trim();
+          if (!image || excluded.has(namespace)) continue;
+          images.add(image);
+        }
+
+        console.log(`🔍 Discovered ${images.size} unique images (excluding system namespaces)`);
+        return [...images];
+      } catch (err) {
+        console.warn('⚠️ Image discovery failed:', err.message.split('\n')[0]);
+        return [];
+      }
+    }
+
+    function scanImage(kubescapePath, image) {
+      const outFile = `/tmp/img-${Date.now()}.json`;
+      try {
+        execSync(
+          `${kubescapePath} scan image "${image}" --format json --output ${outFile} 2>/dev/null`,
+          { stdio: 'pipe', timeout: 120_000 }
+        );
+      } catch (_) {
+        // non-zero exit is normal when vulnerabilities are found
+      }
+      try {
+        if (!fs.existsSync(outFile)) return null;
+        return JSON.parse(fs.readFileSync(outFile, 'utf8'));
+      } catch (_) {
+        return null;
+      } finally {
+        if (fs.existsSync(outFile)) fs.unlinkSync(outFile);
+      }
+    }
+
+    function parseImageVulns(report) {
+      if (!report) return null;
+      const matches =
+        report?.spec?.payload?.matches ||
+        report?.matches ||
+        [];
+      if (!matches.length) return null;
+
+      const counts = { Critical: 0, High: 0, Medium: 0, Low: 0 };
+      const cves = [];
+      for (const m of matches) {
+        const sev = m?.vulnerability?.severity || 'Unknown';
+        const id  = m?.vulnerability?.id       || '?';
+        const pkg = m?.artifact?.name          || '';
+        const ver = m?.artifact?.version       || '';
+        if (sev in counts) counts[sev]++;
+        cves.push({ id, severity: sev, pkg, ver });
+      }
+
+      const sevRank = { Critical: 4, High: 3, Medium: 2, Low: 1 };
+      const topCVEs = [...cves]
+        .sort((a, b) => (sevRank[b.severity] || 0) - (sevRank[a.severity] || 0))
+        .slice(0, 3);
+
+      return { ...counts, topCVEs };
+    }
+
+    async function main() {
+      try {
+        console.log('📥 Installing Kubescape...');
+        execSync(
+          'curl -s https://raw.githubusercontent.com/kubescape/kubescape/master/install.sh | /bin/bash',
+          { stdio: 'inherit' }
+        );
+
+        const kubescapePath = '/usr/local/bin/kubescape';
+        if (!fs.existsSync(kubescapePath)) {
+          throw new Error('Kubescape binary not found after install.');
+        }
+
+        console.log('📥 Installing kubectl...');
+        execSync(
+          'KUBECTL_VERSION=$(curl -sL https://dl.k8s.io/release/stable.txt) && ' +
+          'curl -sLO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/arm64/kubectl" && ' +
+          'chmod +x kubectl && mv kubectl /usr/local/bin/kubectl && kubescape download artifacts --output ~/kubescape-offline-data/',
+          { stdio: 'inherit', shell: '/bin/bash' }
+        );
+
+        // ── Pass 1: compliance scan ───────────────────────────────────────
+        console.log('🔄 Running compliance scan...');
+        //        execSync(
+        //          `${kubescapePath} scan framework AllControls,ArmoBest,DevOpsBest,MITRE,NSA,SOC2,cis-v1.10.0,cis-v1.12.0 --include-namespaces all --format json --output /tmp/results.json`,
+        //          { stdio: 'inherit', timeout: 300_000 }
+        //        );
+
+        execSync(
+          `${kubescapePath} scan framework AllControls,ArmoBest,DevOpsBest,MITRE,NSA,SOC2,cis-v1.10.0,cis-v1.12.0 --include-namespaces all --format json --use-artifacts-from ~/kubescape-offline-data/ --output /tmp/results.json`,
+          { stdio: 'inherit', timeout: 300_000 }
+        );
+        if (!fs.existsSync('/tmp/results.json')) {
+          throw new Error('Compliance scan output not found.');
+        }
+
+        const rawData = fs.readFileSync('/tmp/results.json', 'utf8');
+        const report  = JSON.parse(rawData);
+
+        // ── Pass 2: per-image vulnerability scans ────────────────────────
+        const allImages    = getClusterImages();
+        const MAX_IMAGES   = 20;
+        const imagesToScan = allImages.slice(0, MAX_IMAGES);
+
+        if (allImages.length > MAX_IMAGES) {
+          console.warn(`⚠️ ${allImages.length} images found — scanning first ${MAX_IMAGES}`);
+        }
+
+        const imageResults = {};
+        //for (const image of imagesToScan) {
+        //  console.log(`  🔬 Scanning ${image}`);
+        //  const parsed = parseImageVulns(scanImage(kubescapePath, image));
+        //  if (parsed) imageResults[image] = parsed;
+        //}
+
+        // Aggregate CVE totals across all scanned images
+        let criticalCVEs = 0, highCVEs = 0, mediumCVEs = 0, lowCVEs = 0;
+        for (const d of Object.values(imageResults)) {
+          criticalCVEs += d.Critical;
+          highCVEs     += d.High;
+          mediumCVEs   += d.Medium;
+          lowCVEs      += d.Low;
+        }
+
+        // ── Controls / frameworks ─────────────────────────────────────────
+        const summary          = report.summaryDetails || {};
+        const controls         = summary.controls      || {};
+        const frameworks       = summary.frameworks    || [];
+        const severityCounters = summary.controlsSeverityCounters || {};
+        const critical = severityCounters.criticalSeverity || 0;
+        const high     = severityCounters.highSeverity     || 0;
+        const medium   = severityCounters.mediumSeverity   || 0;
+
+        //const failedFrameworks = frameworks
+        //  .filter(f => f.status === 'failed')
+        const failedFrameworks = frameworks.map(f => ({
+            name:   f.name,
+            score:  f.complianceScore,
+            failed: f.ResourceCounters?.failedResources || 0
+          }));
+
+        const failedControls = Object.values(controls)
+          .filter(c => c.status === 'failed')
+          .map(c => ({
+            id:              c.controlID,
+            name:            c.name,
+            severity:        c.severity,
+            failedResources: c.ResourceCounters?.failedResources || 0,
+            complianceScore: c.complianceScore
+          }));
+
+        const severityBreakdown = { Critical: 0, High: 0, Medium: 0, Low: 0 };
+        for (const control of failedControls) {
+          if (control.severity in severityBreakdown) {
+            severityBreakdown[control.severity]++;
+          }
+        }
+
+        const topControls = [...failedControls]
+          .sort((a, b) => b.failedResources - a.failedResources)
+          .slice(0, 10);
+
+        const compressedReport = await shrinkString(rawData);
+
+        // ── Emoji ─────────────────────────────────────────────────────────
+        let emoji = '🟢';
+        if (critical > 0 || criticalCVEs > 0)  emoji = '🔴';
+        else if (high > 0 || highCVEs > 0)      emoji = '🟠';
+        else if (medium > 0 || mediumCVEs > 0)  emoji = '🟡';
+
+        // ── Message ───────────────────────────────────────────────────────
+        const frameworkSummary = failedFrameworks.length > 0
+          ? failedFrameworks.map(f =>
+              `• ${f.name}: ${f.failed} failed resources (${f.score.toFixed(1)}% compliant)`
+            ).join('\n')
+          : 'None';
+
+        const findingsSummary = topControls.length > 0
+          ? topControls.map(c =>
+              `• [${c.severity}] ${c.name} (${c.failedResources} resources)`
+            ).join('\n')
+          : 'None';
+
+        const sortedImages = Object.entries(imageResults)
+          .sort(([, a], [, b]) => {
+            if (b.Critical !== a.Critical) return b.Critical - a.Critical;
+            return b.High - a.High;
+          });
+
+        const imageSection = sortedImages.length > 0
+          ? sortedImages.slice(0, 5).map(([img, data]) => {
+              const lines = [
+                `• \`${img}\`: C:${data.Critical} H:${data.High} M:${data.Medium} L:${data.Low}`
+              ];
+              for (const cve of data.topCVEs) {
+                lines.push(`  ↳ ${cve.id} [${cve.severity}] ${cve.pkg}${cve.ver ? '@' + cve.ver : ''}`);
+              }
+              return lines.join('\n');
+            }).join('\n')
+          : 'None (no images found or all scans failed)';
+        const overallScoreCompliance =
+          report?.summaryDetails?.complianceScore ??
+          report?.summaryDetails?.resourcesScore ??
+          frameworks?.reduce((a, f) => a + (f.complianceScore || 0), 0) /
+            (frameworks?.length || 1);
+        const messageParts = [
+          `${emoji} **Kubescape Security Report**`,
+          `Scan Date: ${new Date().toISOString()}`,
+          `Overall: ${overallScoreCompliance.toFixed(2) ?? 'N/A'}%`,
+          '',
+          '**Framework Results**',
+          frameworkSummary,
+          '',
+          '**Control Findings**',
+          `• Critical: ${severityBreakdown.Critical}`,
+          `• High: ${severityBreakdown.High}`,
+          `• Medium: ${severityBreakdown.Medium}`,
+          `• Low: ${severityBreakdown.Low}`,
+          '',
+          '**Top Failed Controls**',
+          findingsSummary,
+          '',
+
+        ];
+
+        if (sortedImages.length > 5) {
+          messageParts.push(`_(${sortedImages.length - 5} more images with findings omitted)_`);
+        }
+
+        const message = messageParts.join('\n');
+
+        console.log(message);
+        console.log('📤 Sending summary to Discord proxy...');
+        await sendToProxy('Kubescape Scanner', message);
+        console.log('✅ Done.');
+
+      } catch (err) {
+        console.error('❌ Fatal error:', err);
+        process.exit(1);
+      }
+    }
+
+    main();
    
    
    ---
