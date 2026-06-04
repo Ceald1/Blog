@@ -73,7 +73,7 @@ Now that you installed the essentials, you’re going to install headlamp and ad
    
    # for creating the tls secret do something like: `kubectl create secret tls my-app-certs --cert=path/to/domain.crt --key=path/to/domain.key --namespace=default` make sure your namespace is kube-system
    
-   
+   ---
    kind: Middleware
    apiVersion: traefik.io/v1alpha1
    metadata:
@@ -82,7 +82,7 @@ Now that you installed the essentials, you’re going to install headlamp and ad
     spec:
      basicAuth:
       secret: headlamp-auth-secret
-   
+   ---
    kind: Secret
    apiVersion: v1
    metadata:
@@ -92,6 +92,26 @@ Now that you installed the essentials, you’re going to install headlamp and ad
    stringData:
    users: |
      pi:$2y$05$Q/XB.g6vYzkCy8iTXfISSenWaOtS5J4BDJMi01r7.CN6ZsoFUiL/C # raspberry as the password (can be changed referencing this: https://stackoverflow.com/questions/62116895/traefik-basic-auth )
+   ---
+   apiVersion: v1
+   kind: ServiceAccount
+   metadata:
+     name: headlamp-admin
+     namespace: kube-system
+
+   ---
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: ClusterRoleBinding
+   metadata:
+     name: headlamp-admin
+   roleRef:
+     apiGroup: rbac.authorization.k8s.io
+     kind: ClusterRole
+     name: cluster-admin
+   subjects:
+     - kind: ServiceAccount
+       name: headlamp-admin
+       namespace: kube-system
    ```
 
 3. Create a new cluster token for authenticating to headlamp `kubectl create token headlamp-admin -n kube-system`
