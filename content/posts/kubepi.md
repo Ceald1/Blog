@@ -342,24 +342,23 @@ If you really wanna make it super l33t 1337 add alerting to discord!
      server.js: |
        const http = require('http');
        const https = require('https');
-       
+   
        const WEBHOOK = process.env.DISCORD_WEBHOOK;
-       
+   
        // ------------------------------
        // Discord sender
        // ------------------------------
        function sendDiscord(username, content) {
          return new Promise((resolve, reject) => {
-           if (content.length > 2000) content = content.slice(0, 1997) + '...';
-       
+   
            const body = JSON.stringify({
              username,
              avatar_url: 'https://i.kym-cdn.com/photos/images/newsfeed/003/132/154/b1b.jpg',
              content
            });
-       
+   
            const url = new URL(WEBHOOK);
-       
+   
            const req = https.request({
              hostname: url.hostname,
              path: url.pathname,
@@ -372,13 +371,13 @@ If you really wanna make it super l33t 1337 add alerting to discord!
              res.resume();
              resolve();
            });
-       
+   
            req.on('error', reject);
            req.write(body);
            req.end();
          });
        }
-       
+   
        // ------------------------------
        // Helpers
        // ------------------------------
@@ -389,12 +388,12 @@ If you really wanna make it super l33t 1337 add alerting to discord!
            return String(obj);
          }
        }
-       
+   
        function extractKubescapeAlert(record) {
          const f = record?.failure?.BaseRuntimeAlert;
          const proc = f?.identifiers?.process || {};
          const k8s = record?.failure?.RuntimeAlertK8sDetails || {};
-       
+   
          return {
            rule: record?.failure?.RuleAlert?.ruleDescription || 'Kubescape alert',
            alert: f?.alertName,
@@ -406,14 +405,14 @@ If you really wanna make it super l33t 1337 add alerting to discord!
            image: k8s.image
          };
        }
-       
+   
        function extractTetragon(record) {
          const p =
            record?.process_exec?.process ||
            record?.process_exit?.process;
-       
+   
          if (!p) return null;
-       
+   
          return {
            event: record.process_exec ? 'exec' : 'exit',
            binary: p.binary,
@@ -423,7 +422,7 @@ If you really wanna make it super l33t 1337 add alerting to discord!
            namespace: p.pod?.namespace || record.namespace
          };
        }
-       
+   
        // ------------------------------
        // Server
        // ------------------------------
@@ -432,10 +431,10 @@ If you really wanna make it super l33t 1337 add alerting to discord!
            res.writeHead(405);
            return res.end();
          }
-       
+   
          let body = '';
          req.on('data', d => body += d);
-       
+   
          req.on('end', async () => {
    
              let parsedBody;
@@ -445,7 +444,7 @@ If you really wanna make it super l33t 1337 add alerting to discord!
              } catch {
                parsedBody = null;
              }
-           
+   
              // ------------------------------
              // FAST PATH: direct forward based on username/content
              // ------------------------------
@@ -454,7 +453,7 @@ If you really wanna make it super l33t 1337 add alerting to discord!
                typeof parsedBody?.content === "string"
              ) {
                await sendDiscord(parsedBody.username, parsedBody.content);
-           
+   
                res.writeHead(204);
                return res.end();
              }
@@ -462,13 +461,13 @@ If you really wanna make it super l33t 1337 add alerting to discord!
    
    
            const lines = body.trim().split('\n');
-       
+   
            for (const line of lines) {
              if (!line) continue;
-       
+   
              try {
                const record = JSON.parse(line);
-       
+   
                const cluster = record.cluster || 'unknown';
                const source = record.source || record.tag || 'unknown';
                // Global namespace exclusion
@@ -478,33 +477,33 @@ If you really wanna make it super l33t 1337 add alerting to discord!
                  record?.process_exit?.process?.pod?.namespace ||
                  record?.kubernetes?.namespace_name ||
                  record?.namespace;
-               
-               if (namespace === 'kubescape') {
+   
+               if (namespace === 'kubescape' || namespace === 'kubearmor') {
                  continue;
                }
-       
+   
                // --------------------------
                // Kubescape alert handling
                // --------------------------
                if (record?.failure?.BaseRuntimeAlert) {
                  const a = extractKubescapeAlert(record);
-       
+   
                  const content =
        `🚨 **Kubescape Alert**
        Cluster: \`${cluster}\`
        Rule: ${a.rule}
        Alert: ${a.alert}
        Severity: ${a.severity}
-       
+   
        Process: \`${a.process}\`
        Pod: \`${a.pod}\`
        Namespace: \`${a.namespace}\`
        Node: \`${a.node}\``;
-       
+   
                  await sendDiscord('Kubescape', content);
                  continue;
                }
-       
+   
                // --------------------------
                // Tetragon handling (STRICT FILTER)
                // --------------------------
@@ -516,52 +515,55 @@ If you really wanna make it super l33t 1337 add alerting to discord!
                    record?.process_exec?.process?.pod?.namespace ||
                    record?.process_exit?.process?.pod?.namespace ||
                    record?.namespace;
-       
+   
                  // HARD GATE: only allowed namespaces
                  if (!ns || !["default", "kube-prod"].includes(ns)) {
                    continue;
                  }
-       
+   
                  const t = extractTetragon(record);
-       
+   
                  if (t) {
                    const content =
        `🧬 **Tetragon Event**
        Cluster: \`${cluster}\`
        Event: \`${t.event}\`
-       
+   
        Binary: \`${t.binary}\`
        Args: \`${t.args}\`
        Pod: \`${t.pod || 'host'}\`
        Namespace: \`${t.namespace || 'host'}\``;
-       
+   
                    await sendDiscord('Tetragon', content);
                    continue;
                  }
                }
-       
+   
                // --------------------------
                // Fallback
                // --------------------------
                const pretty = safeJson(record);
-       
+   
                const content =
        `**[${cluster}] ${source}**
        \`\`\`json
        ${pretty}
        \`\`\``;
-       
+               if (source === 'kubescape.node-agent'){
+                 continue;
+               }
+   
                await sendDiscord('Security Logs', content);
-       
+   
              } catch (e) {
                console.error('parse error', e, line);
              }
            }
-       
+   
            res.writeHead(204);
            res.end();
          });
-       
+   
        }).listen(8080, () => console.log('discord proxy listening on 8080'));
    ---
    apiVersion: apps/v1
