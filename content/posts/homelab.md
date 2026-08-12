@@ -219,5 +219,125 @@ tetragonOperator:
 ```
 you'll get metrics and logs exported so you can view them in grafana.
 
+It's probably apparent that you won't be able to access anything because you don't have any ingresses setup in the cluster yet, that's where kyverno and cert manager will come into play.
 
+Install kyverno and cert manager then create a cluster issuer and everything else for cert manager like:
+```yaml
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned-issuer
+  namespace: cert-manager
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: orbit-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: orbit-ca
+  secretName: orbit-ca-secret
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: orbit-ca-cluster-issuer
+spec:
+  ca:
+    secretName: orbit-ca-secret # adjust to match your actual CA secret
+```
+this issuer is cluster wide btw so you can get certs signed from this issuer anywhere.
 
+For kyverno policy:
+```yaml
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: force-external-dns-target
+spec:
+  admission: true
+  background: true
+  emitWarning: false
+  mutateExistingOnPolicyUpdate: true
+  rules:
+  - match:
+      any:
+      - resources:
+          kinds:
+          - Ingress
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          annotations:
+            cert-manager.io/cluster-issuer: orbit-ca-issuer
+            external-dns.alpha.kubernetes.io/target: 127.0.0.1
+      targets:
+      - apiVersion: networking.k8s.io/v1
+        kind: Ingress
+    name: set-target-annotation
+    skipBackgroundRequests: true
+  validationFailureAction: Audit
+```
+You don't need the external dns annotation in the policy if you're not going to use external dns but if you do it'd be a good idea to also get etcd or a source for external dns to write to.
+
+The policy will mutate all your ingresses to have the orbit-ca-issuer added so you don't need to manually add it everytime you make an ingress.
+
+Now for your first ingress on the cluster, you'd write something like this:
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+  name: prometheus-grafana-ingress
+  namespace: monitoring
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: dashboard.orbit.orbit
+    http:
+      paths:
+      - backend:
+          service:
+            name: prometheus-grafana
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - dashboard.orbit.orbit
+    secretName: grafana-tls
+```
+If you get that ingress like: `kubectl get ingress -n monitoring -o yaml` you'll notice that it's been changed! If not then add this cluster role:
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kyverno-background-controller-namespace
+  labels:
+    rbac.kyverno.io/aggregate-to-background-controller: "true"
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - patch
+```
+Nice, not even halfway done yet! I won't post ALL my ingresses because that'd be insane.
+
+![alt text](https://media1.tenor.com/m/wGufiBV_pI0AAAAC/hide-the-pain-harold-pain.gif)
