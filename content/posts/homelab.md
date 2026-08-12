@@ -12,7 +12,7 @@ description = "an elitist homelab guide to homelabbing"
 showFullContent = false
 readingTime = true
 hideComments = false
-summary = "malware notes"
+summary = "an elitist homelab"
 toc = true
 +++
 
@@ -341,3 +341,306 @@ rules:
 Nice, not even halfway done yet! I won't post ALL my ingresses because that'd be insane.
 
 ![alt text](https://media1.tenor.com/m/wGufiBV_pI0AAAAC/hide-the-pain-harold-pain.gif)
+
+Time to get some services for security going for enforcement, security posture, and observability.
+
+### Tetragon
+Tetragon is an observability tool that compliments cilium by having runtime enforcement along with observability into pods. Here's my values.yaml:
+```yaml
+# tetragon-values.yaml
+export:
+  stdout:
+    enabledCommand: true
+    enabledArgs: true
+  filenames:
+    - /var/log/tetragon/tetragon.json
+
+tetragon:
+  prometheus:
+    metricsLabelFilter: "namespace,workload,binary" # "pod" label is disabled
+    serviceMonitor:
+      enabled: true
+    port: 2222 # default is 2112
+tetragonOperator:
+  prometheus:
+    serviceMonitor:
+      enabled: true
+    port: 3333 # default is 2113
+```
+
+### Kubescape
+Kubescape is a tool for security posture and allows for vulnerability scans on images, here's my helm installation command for it:
+```bash
+ helm upgrade --install kubescape kubescape/kubescape-operator -n kubescape --create-namespace --set capabilities.continuousScan=enable --set capabilities.prometheusExporter=enable --set kubescape.serviceMonitor.enabled=false --set clusterName=default
+
+```
+you'll notice that the service monitor is disabled that's because it's actually broken and does not work with newer versions of the kubestack, here's the manifest I used to create one:
+```yaml
+# kubescape-monitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kubescape-prometheus-exporter
+  namespace: kubescape
+spec:
+  namespaceSelector:
+    matchNames:
+      - kubescape
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: prometheus-exporter
+      app.kubernetes.io/instance: kubescape
+      app.kubernetes.io/name: kubescape-operator
+  endpoints:
+    - targetPort: 8080
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+```
+### Istio
+A service mesh like istio is always nice to have for encrypted communication between pods and services, here's how I set it up:
+
+```bash
+istioctl install --set components.ingressGateways[0].name=istio-ingressgateway --set components.ingressGateways[0].enabled=false
+```
+then for the grafana dashboards:
+```bash
+istioctl dashboard grafana -n monitoring
+```
+create a policy:
+```yaml
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istio-system
+spec:
+  mtls:
+    mode: PERMISSIVE # normally STRICT is preferred but PERMISSIVE won't make any breakages if any occur like excluded namespaces communicating to ones that have mtls.
+```
+finally make a cluster policy for applying it to selected namespaces:
+```yaml
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-istio-injection-label-all
+spec:
+  mutateExistingOnPolicyUpdate: true
+  rules:
+    - name: label-all-namespaces
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+              names:
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - istio-system
+                - longhorn-system
+                - cilium-secrets
+                - cilium-monitoring
+                - cattle-system
+                - cert-manager
+                - kyverno
+                - kubevirt
+                - cdi
+                - homepage
+      mutate:
+        targets:
+          - apiVersion: v1
+            kind: Namespace
+            preconditions:
+              all:
+                - key: "{{ target.metadata.name }}"
+                  operator: AnyNotIn
+                  value:
+                    - kube-system
+                    - kube-public
+                    - kube-node-lease
+                    - istio-system
+                    - longhorn-system
+                    - cilium-secrets
+                    - cilium-monitoring
+                    - cattle-system
+                    - cert-manager
+                    - kyverno
+                    - kubevirt
+                    - cdi
+                    - homepage
+        patchStrategicMerge:
+          metadata:
+            labels:
+              istio-injection: enabled
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: remove-istio-injection-label-from-excluded
+spec:
+  mutateExistingOnPolicyUpdate: true
+  rules:
+    - name: unlabel-excluded-namespaces
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+              names:
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - istio-system
+                - longhorn-system
+                - cilium-secrets
+                - cilium-monitoring
+                - cattle-system
+                - cert-manager
+                - kyverno
+                - kubevirt
+                - cdi
+                - homepage
+      mutate:
+        targets:
+          - apiVersion: v1
+            kind: Namespace
+            preconditions:
+              all:
+                - key: "{{ target.metadata.name }}"
+                  operator: AnyIn
+                  value:
+                    - kube-system
+                    - kube-public
+                    - kube-node-lease
+                    - istio-system
+                    - longhorn-system
+                    - cilium-secrets
+                    - cilium-monitoring
+                    - cattle-system
+                    - cert-manager
+                    - kyverno
+                    - kubevirt
+                    - cdi
+                    - homepage
+        patchStrategicMerge:
+          metadata:
+            labels:
+              istio-injection: null
+```
+There needs to be one that reverts the mutation because for some reason kyverno doesn't fully exclude namespaces properly
+
+### Kubevirt
+
+The last service I'll be going over is setting up kubevirt with an Azure Linux vm. Azure Linux is essentially trashy Fedora with half the packages.
+
+```bash
+export RELEASE=$(curl https://storage.googleapis.com/kubevirt-prow/release/kubevirt/kubevirt/stable.txt)
+kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/${RELEASE}/kubevirt-operator.yaml
+kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/${RELEASE}/kubevirt-cr.yaml
+kubectl -n kubevirt wait kv kubevirt --for condition=Available
+export TAG=$(curl -s -w %{redirect_url} https://github.com/kubevirt/containerized-data-importer/releases/latest)
+export VERSION=$(echo ${TAG##*/})
+kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/$VERSION/cdi-operator.yaml
+kubectl create -f https://github.com/kubevirt/containerized-data-importer/releases/download/$VERSION/cdi-cr.yaml
+```
+This script will install kubevirt and now to make a VM!
+
+```yaml
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+
+  finalizers:
+    - kubevirt.io/virtualMachineControllerFinalize
+  name: test
+  namespace: default
+
+spec:
+  dataVolumeTemplates:
+    - metadata:
+        name: test-boot-volume
+      spec:
+        source:
+          http:
+            url: https://aka.ms/azurelinux-4.0-x86_64.iso
+        storage:
+          resources:
+            requests:
+              storage: 1Gi
+    - metadata:
+        name: test-target-disk
+      spec:
+        source:
+          blank: {}
+        storage:
+          resources:
+            requests:
+              storage: 50Gi
+          storageClassName: longhorn
+  runStrategy: Halted
+  template:
+    metadata:
+      annotations:
+        kubevirt.io/pci-topology-version: v3
+    spec:
+      architecture: amd64
+      domain:
+        cpu:
+          cores: 2
+        devices:
+          autoattachGraphicsDevice: true
+          disks:
+            - bootOrder: 300
+              disk:
+                bus: sata
+              name: test-boot-volume
+            - disk:
+                bus: virtio
+              name: cloudinitdisk
+            - bootOrder: 1
+              disk:
+                bus: virtio
+              name: disk-1
+          interfaces:
+            - masquerade: {}
+              name: default
+        firmware:
+          bootloader:
+            efi:
+              persistent: true
+              secureBoot: false
+          serial: 774cc0a1-2a83-488a-b17a-a6c3e8cc251f
+          uuid: 21e8b2bb-7b44-4b47-8e5e-5915aa02c562
+        machine:
+          type: q35
+        resources:
+          requests:
+            memory: 2Gi
+      networks:
+        - name: default
+          pod: {}
+      volumes:
+        - dataVolume:
+            name: test-boot-volume
+          name: test-boot-volume
+        - cloudInitNoCloud:
+            userData: |
+              #cloud-config
+          name: cloudinitdisk
+        - dataVolume:
+            name: test-target-disk
+          name: disk-1
+```
+
+# Final Product!
+
+Here's a diagram of the final product:
+```mermaid
+
+```
