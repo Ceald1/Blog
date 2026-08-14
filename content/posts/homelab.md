@@ -168,55 +168,40 @@ monitoring:
     enabled: false
   serviceMonitor:
     enabled: false
-promtail:
-  config:
-    snippets:
-      extraScrapeConfigs: |
-        - job_name: tetragon
-          static_configs:
-            - targets:
-                - localhost
-              labels:
-                job: tetragon
-                __path__: /var/run/cilium/tetragon/tetragon.log
-          pipeline_stages:
-            - json:
-                expressions:
-                  process_exec: process_exec
-                  process_exit: process_exit
-                  process_kprobe: process_kprobe
-  extraVolumeMounts:
-    - mountPath: /var/run/cilium/tetragon
-      name: tetragon-logs
-      readOnly: true
-  extraVolumes:
-    - hostPath:
-        path: /var/run/cilium/tetragon
-      name: tetragon-logs
+
 ```
-another thing that would compliment cilium well is tetragon! Here's my values.yaml file:
+another thing that would be great for observability is falco! Here's my values.yaml file:
 ```yaml
-# tetragon-values.yaml
-export:
-  stdout:
-    enabledCommand: true
-    enabledArgs: true
-  filenames:
-    - /var/log/tetragon/tetragon.json
+# falco-values.yaml
+json_output: true
+json_include_output_property: true
+http_output:
+  enabled: true
+  url: "http://falco-falcosidekick:2801/"
+falcosidekick:
+  enabled: true
 
-tetragon:
-  prometheus:
-    metricsLabelFilter: "namespace,workload,binary" # "pod" label is disabled
-    serviceMonitor:
-      enabled: true
-    port: 2222 # default is 2112
-tetragonOperator:
-  prometheus:
-    serviceMonitor:
-      enabled: true
-    port: 3333 # default is 2113
-
+  config:
+    loki:
+      hostport: http://loki.monitoring.svc.cluster.local:3100
+      format: json
+falcoctl:
+  config:
+    artifact:
+      install:
+        refs:
+          - falco-rules:5
+          - falco-incubating-rules:2
+          - falco-sandbox-rules:2
+      follow:
+        refs:
+          - falco-rules:5
+          - falco-incubating-rules:2
+          - falco-sandbox-rules:2
 ```
+
+falco is a runtime security tool that detects policy violations like for example reading `/etc/shadow` and can return an error early using eBPFs.
+
 you'll get metrics and logs exported so you can view them in grafana.
 
 It's probably apparent that you won't be able to access anything because you don't have any ingresses setup in the cluster yet, that's where kyverno and cert manager will come into play.
@@ -344,35 +329,604 @@ Nice, not even halfway done yet! I won't post ALL my ingresses because that'd be
 
 Time to get some services for security going for enforcement, security posture, and observability.
 
-### Tetragon
-Tetragon is an observability tool that compliments cilium by having runtime enforcement along with observability into pods. Here's my values.yaml:
-```yaml
-# tetragon-values.yaml
-export:
-  stdout:
-    enabledCommand: true
-    enabledArgs: true
-  filenames:
-    - /var/log/tetragon/tetragon.json
 
-tetragon:
-  prometheus:
-    metricsLabelFilter: "namespace,workload,binary" # "pod" label is disabled
-    serviceMonitor:
-      enabled: true
-    port: 2222 # default is 2112
-tetragonOperator:
-  prometheus:
-    serviceMonitor:
-      enabled: true
-    port: 3333 # default is 2113
+### Falco
+here's my falco dashboard if you chose to use flaco:
 ```
+{
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "falco-loki-overview",
+    "namespace": "default",
+    "uid": "19116f53-8e05-4028-a9c4-6144679c9ff4",
+    "resourceVersion": "1786738650362008",
+    "generation": 11,
+    "creationTimestamp": "2026-08-14T20:05:37Z",
+    "labels": {
+      "grafana.app/deprecatedInternalID": "3189760802177024"
+    },
+    "annotations": {
+      "grafana.app/createdBy": "user:efuqhwxn3paf4b",
+      "grafana.app/saved-from-ui": "Grafana v13.1.2 (7f247b37a4)",
+      "grafana.app/updatedBy": "user:efuqhwxn3paf4b",
+      "grafana.app/updatedTimestamp": "2026-08-14T20:17:30Z"
+    }
+  },
+  "spec": {
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana",
+            "version": "v0",
+            "spec": {}
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "builtIn": true
+        }
+      }
+    ],
+    "cursorSync": "Crosshair",
+    "editable": true,
+    "elements": {
+      "panel-1": {
+        "kind": "Panel",
+        "spec": {
+          "id": 1,
+          "title": "Total Detections",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "P8E80F9AEF21F6940"
+                      },
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({app=\"falco\"}[$__interval]))",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.1.2",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "id": 2,
+          "title": "Alerts by Priority",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "P8E80F9AEF21F6940"
+                      },
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum by (priority) (count_over_time({app=\"falco\"} | json | __error__=\"\" [$__interval]))",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.1.2",
+            "spec": {
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "id": 3,
+          "title": "Falco Detections Over Time",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "P8E80F9AEF21F6940"
+                      },
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum by (priority) (rate({app=\"falco\"} | json | __error__=\"\" [$__interval]))",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "timeseries",
+            "version": "13.1.2",
+            "spec": {
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 20,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "normal"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "id": 4,
+          "title": "Top Triggered Rules",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "P8E80F9AEF21F6940"
+                      },
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "sum by (rule) (count_over_time({app=\"falco\"} | json | __error__=\"\" [$__interval]))",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "piechart",
+            "version": "13.1.2",
+            "spec": {
+              "options": {
+                "displayLabels": [
+                  "percent"
+                ],
+                "legend": {
+                  "displayMode": "list",
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "pieType": "pie",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic",
+                    "fixedColor": "#73BF69"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "id": 5,
+          "title": "Falco Event Stream",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "P8E80F9AEF21F6940"
+                      },
+                      "spec": {
+                        "direction": "backward",
+                        "editorMode": "code",
+                        "expr": "{app=\"falco\"} | json",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "13.1.2",
+            "spec": {
+              "options": {
+                "dedupStrategy": "none",
+                "enableInfiniteScrolling": false,
+                "enableLogDetails": true,
+                "prettifyLogMessage": true,
+                "showControls": false,
+                "showFieldSelector": false,
+                "showLabels": false,
+                "showLevel": true,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "timestampResolution": "ms",
+                "unwrappedColumns": false,
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "layout": {
+      "kind": "GridLayout",
+      "spec": {
+        "items": [
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 0,
+              "width": 6,
+              "height": 4,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-1"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 6,
+              "y": 0,
+              "width": 18,
+              "height": 4,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-2"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 4,
+              "width": 16,
+              "height": 8,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-3"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 16,
+              "y": 4,
+              "width": 8,
+              "height": 8,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-4"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 12,
+              "width": 24,
+              "height": 12,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-5"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "links": [],
+    "liveNow": false,
+    "preload": false,
+    "tags": [
+      "falco",
+      "security",
+      "loki"
+    ],
+    "timeSettings": {
+      "timezone": "browser",
+      "from": "now-1h",
+      "to": "now",
+      "autoRefresh": "10s",
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m"
+      ],
+      "hideTimepicker": false,
+      "fiscalYearStartMonth": 0
+    },
+    "title": "Falco Runtime Security (Loki)",
+    "variables": []
+  }
+}
+```
+
 
 ### Kubescape
 Kubescape is a tool for security posture and allows for vulnerability scans on images, here's my helm installation command for it:
 ```bash
- helm upgrade --install kubescape kubescape/kubescape-operator -n kubescape --create-namespace --set capabilities.continuousScan=enable --set capabilities.prometheusExporter=enable --set kubescape.serviceMonitor.enabled=false --set clusterName=default
-
+helm upgrade --install kubescape kubescape/kubescape-operator \
+                               -n kubescape \
+                               --create-namespace \
+                               --set capabilities.continuousScan=enable \
+                               --set capabilities.prometheusExporter=enable \
+                               --set kubescape.serviceMonitor.enabled=false \
+                               --set clusterName=default \
+                               --set kubescape.resources.requests.cpu=100m \
+                               --set kubescape.resources.requests.memory=100Mi \
+                               --set kubescape.resources.limits.cpu=300m \
+                               --set kubescape.resources.limits.memory=100Mi \
+                               --set kubevuln.resources.requests.memory=400Mi \
+                               --set kubevuln.resources.limits.memory=500Mi
 ```
 you'll notice that the service monitor is disabled that's because it's actually broken and does not work with newer versions of the kubestack, here's the manifest I used to create one:
 ```yaml
@@ -637,6 +1191,16 @@ spec:
             name: test-target-disk
           name: disk-1
 ```
+
+### Kiali 
+Kiali is a ui for istio's service mesh so you can have observability into pods that have the proxy attached for mtls, here's how to set up:
+```bash
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.30/samples/addons/prometheus.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.30/samples/addons/grafana.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.30/samples/addons/kiali.yaml
+```
+
+
 
 # Final Product!
 
