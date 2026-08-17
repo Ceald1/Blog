@@ -236,10 +236,11 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: orbit-ca-cluster-issuer
+  name: orbit-ca-issuer
 spec:
   ca:
-    secretName: orbit-ca-secret # adjust to match your actual CA secret
+    secretName: orbit-ca-secret
+
 ```
 this issuer is cluster wide btw so you can get certs signed from this issuer anywhere.
 
