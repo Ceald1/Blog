@@ -920,13 +920,8 @@ helm upgrade --install kubescape kubescape/kubescape-operator \
                                --set capabilities.continuousScan=enable \
                                --set capabilities.prometheusExporter=enable \
                                --set kubescape.serviceMonitor.enabled=false \
-                               --set clusterName=default \
-                               --set kubescape.resources.requests.cpu=100m \
-                               --set kubescape.resources.requests.memory=100Mi \
-                               --set kubescape.resources.limits.cpu=300m \
-                               --set kubescape.resources.limits.memory=100Mi \
-                               --set kubevuln.resources.requests.memory=400Mi \
-                               --set kubevuln.resources.limits.memory=500Mi
+                               --set clusterName=default
+
 ```
 you'll notice that the service monitor is disabled that's because it's actually broken and does not work with newer versions of the kubestack, here's the manifest I used to create one:
 ```yaml
@@ -1202,9 +1197,72 @@ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.30/samp
 
 
 
-# Final Product!
+
+## Final Product!
 
 Here's a diagram of the final product:
+
 ```mermaid
+%%{init: {
+  "flowchart": {
+    "useMaxWidth": false,
+    "nodeSpacing": 95,
+    "rankSpacing": 95
+  }
+}}%%
+graph 
+
+    cil["Cilium"]
+
+    subgraph kube_system["kube-system namespace"]
+
+        h_ui["Hubble UI"]
+        cdns["Core DNS"]
+        ed["etcd DNS"]
+        cagent["Cilium Agent"]
+        hl["headlamp"]
+        
+
+        h_ui -->|"reads from"| cagent
+        cdns -->|"reads from"| ed
+    end
+
+    subgraph scape["Kubescape namespace"]
+        kscape["Kubescape"]
+        scapeStorage["Kubescape storage"]
+        scapeEx["Kubescape exporter"]
+        kscape --> |"logs data to"| scapeStorage
+        scapeEx --> |"reads from"| scapeStorage
+         
+        
+    end
+
+    subgraph monitoring["monitoring namespace"]
+        graf["grafana"]
+        lki["loki"]
+        promo["prometheus"]
+        promo --> |"scrapes metrics"| cdns
+        graf --> |"reads from"| promo
+        graf --> |"reads from"| lki
+        promo --> |"scrapes metrics"| cagent
+        promo --> |"scrapes data"| scapeEx
+    end
+    subgraph istio-system["istio-system namespace"]
+        istio["istio"]
+        isproxy["istio proxy"]
+        istio --> |"manages injections"| isproxy
+        kiali --> |"visualizations of"| istio
+    end
+
+    subgraph external-dns["external-dns namespace"]
+        eDNS["external dns"]
+        eDNS --> |"sends new entries to"| ed
+    end
+
+
+    cil -->|"observes"| kube_system & scape & monitoring & scape & kyverno & default & external-dns & falco
+    isproxy -->|"  mtls sidecar on pods  "| scape & monitoring & kyverno & default & external-dns & falco
+
+
 
 ```
