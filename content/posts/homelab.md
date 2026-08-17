@@ -1206,22 +1206,23 @@ Here's a diagram of the final product:
 %%{init: {
   "flowchart": {
     "useMaxWidth": false,
-    "nodeSpacing": 95,
-    "rankSpacing": 95
+    "nodeSpacing": 100,
+    "rankSpacing": 120,
+    "padding": 20,
+    "htmlLabel": true,
+    "defaultRenderer": "dagre"
   }
 }}%%
-graph 
+flowchart LR
 
-    cil["Cilium"]
+    cil["Cilium eBPF"]
 
     subgraph kube_system["kube-system namespace"]
-
         h_ui["Hubble UI"]
         cdns["Core DNS"]
         ed["etcd DNS"]
         cagent["Cilium Agent"]
         hl["headlamp"]
-        
 
         h_ui -->|"reads from"| cagent
         cdns -->|"reads from"| ed
@@ -1231,38 +1232,66 @@ graph
         kscape["Kubescape"]
         scapeStorage["Kubescape storage"]
         scapeEx["Kubescape exporter"]
-        kscape --> |"logs data to"| scapeStorage
-        scapeEx --> |"reads from"| scapeStorage
-         
-        
+
+        kscape -->|"logs data to"| scapeStorage
+        scapeEx -->|"reads from"| scapeStorage
     end
 
     subgraph monitoring["monitoring namespace"]
         graf["grafana"]
         lki["loki"]
         promo["prometheus"]
-        promo --> |"scrapes metrics"| cdns
-        graf --> |"reads from"| promo
-        graf --> |"reads from"| lki
-        promo --> |"scrapes metrics"| cagent
-        promo --> |"scrapes data"| scapeEx
+
+        graf -->|"reads from"| promo
+        graf -->|"reads from"| lki
+        promo -->|"scrapes metrics"| cdns
+        promo -->|"scrapes metrics"| cagent
+        promo -->|"scrapes data"| scapeEx
     end
-    subgraph istio-system["istio-system namespace"]
+
+    subgraph istio_system["istio-system namespace"]
         istio["istio"]
         isproxy["istio proxy"]
-        istio --> |"manages injections"| isproxy
-        kiali --> |"visualizations of"| istio
+        kiali["kiali"]
+
+        istio -->|"manages injections"| isproxy
+        kiali -->|"visualizations of"| istio
     end
 
-    subgraph external-dns["external-dns namespace"]
+    subgraph external_dns["external-dns namespace"]
         eDNS["external dns"]
-        eDNS --> |"sends new entries to"| ed
+
+        eDNS -->|"sends new entries to"| ed
     end
 
+    subgraph falco_ns["falco namespace"]
+        f["falco"]
+        fside["falco sidekick"]
 
-    cil -->|"observes"| kube_system & scape & monitoring & scape & kyverno & default & external-dns & falco
-    isproxy -->|"  mtls sidecar on pods  "| scape & monitoring & kyverno & default & external-dns & falco
+        f -->|"outputs to"| fside
+        promo -->|"scrapes from"| fside
+    end
 
+    subgraph longhorn_ns["longhorn-system namespace"]
+        lmanage["longhorn manager"]
+        csiPlug["longhorn csi plugin"]
+        lui["longhorn ui"]
 
+        csiPlug -->|"longhorn api"| lmanage  
+        lui -->|"longhorn api"| lmanage
+    end
 
+    subgraph kyverno_ns["kyverno namespace"]
+        kyv["kyverno"]
+    end
+
+    subgraph default_ns["default namespace"]
+        def_workloads["Default Workloads"]
+    end
+
+    %% Cross-namespace / Global connections
+    cil -->|"observes kernel"| cagent & kscape & promo & kyv & def_workloads & eDNS & f & lmanage
+    isproxy -->|"mTLS sidecar"| kscape & promo & kyv & def_workloads & eDNS & f & lmanage
+    f -->|"observes syscalls"| cagent & kscape & promo & kyv & def_workloads & eDNS & lmanage
+    kyv -->|"enforces policies"| cagent & kscape & promo & def_workloads & eDNS & f & lmanage
 ```
